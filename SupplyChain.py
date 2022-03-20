@@ -82,10 +82,9 @@ class Storefront:
     Entry point for the user. Maintains Orders and Inventories.
     """
 
-    def __init__(self):
-        orders = []
-        list = []
-        inventory = Inventory(list)
+    def __init__(self, orders, inventory):
+        self.orders = orders
+        self.inventory = inventory
 
     def userMenu(self):
         pass
