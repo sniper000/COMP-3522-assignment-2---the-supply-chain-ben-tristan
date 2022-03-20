@@ -1,3 +1,4 @@
+import abc
 import enum
 
 
@@ -8,6 +9,51 @@ class Holiday(enum.Enum):
     HALLOWEEN = 0,
     CHRISTMAS = 1,
     EASTER = 2
+
+
+class Toys(abc.ABC):
+    """
+    Toys defines the interface for one of the products that the
+    abstract factory is responsible to create
+    """
+
+    @abc.abstractmethod
+    def __init__(self, name, description, product_id, battery_operated, recommended_age):
+        self.name = name
+        self.description = description
+        self.product_id = product_id
+        self.battery_operated = battery_operated
+        self.recommended_age = recommended_age
+
+
+class StuffedAnimals(abc.ABC):
+    """
+    Stuffed Animals defines the interface for one of the products that the
+    abstract factory pattern is responsible to create.
+    """
+
+    @abc.abstractmethod
+    def __init__(self, name, description, product_id, stuffing, size, fabric):
+        self.name = name
+        self.description = description
+        self.product_id = product_id
+        self.stuffing = stuffing
+        self.size = size
+        self.fabric = fabric
+
+
+class Candy(abc.ABC):
+    """
+    Candy defines the interface for one of the products that the
+    abstract factory pattern is responsible to create.
+    """
+
+    def __init__(self, name, description, product_id, contain_nuts, lactose_free):
+        self.name = name
+        self.description = description
+        self.product_id = product_id
+        self.contain_nuts = contain_nuts
+        self.lactose_free = lactose_free
 
 
 class Inventory:
@@ -77,8 +123,10 @@ class OrderProcessor:
     """
     OrderProcessor class that connects Orders to the factory.
     """
+
     def __init__(self):
         pass
+
 
 def main():
     Storefront()
