@@ -85,7 +85,10 @@ class Inventory:
         return int(len(self.candyInventory))
 
     def print(self):
-        [print(item) for item in self.inventory]
+        print("Printing inventory: ")
+        [print(item) for item in self.toyInventory]
+        [print(item) for item in self.stuffedAnimalInventory]
+        [print(item) for item in self.candyInventory]
 
 
 class Storefront:
@@ -107,7 +110,7 @@ class Storefront:
                               )
 
             if userInput == '0':
-                pass
+                self.createOrder()
             if userInput == '1':
                 self.checkInventories()
             if userInput == '2':
@@ -117,8 +120,23 @@ class Storefront:
         except ValueError:
             print("invalid input")
 
+    # factoryMapping, orderNumber, productId, item, itemName, quantity, productDetails
     def createOrder(self):
-        pass
+        print(f"Creating a new order: \n")
+        try:
+            holiday = int(input(f"Enter: \n"
+                                f"0 for Halloween \n"
+                                f"1 for Christmas \n"
+                                f"2 for Easter \n"))
+            item = int(input(f'Enter: \n'
+                             f'0 for Toy \n'
+                             f'1 for Stuffed Animal \n'
+                             f'2 for Candy \n'))
+            factoryMapping = (holiday, item) #check
+            orderNum = int(input("Enter Order Number"))
+            productID = input("Enter product Id")
+        except ValueError:
+            print("invalid input")
 
     def appendOrder(self, order):
         self.orders.append(order)
@@ -158,13 +176,18 @@ class Order:
     Order class defines what product the user requires from the factory.
     """
 
-    def __init__(self, factoryMapping, orderNumber, productId, item, itemName, productDetails):
+    def __init__(self, factoryMapping, orderNumber, productId, item, itemName, quantity, productDetails):
         self.factoryMapping = factoryMapping
         self.orderNumber = orderNumber
         self.productId = productId
         self.item = item
         self.itemName = itemName
+        self.quantity = quantity
         self.productDetails = productDetails
+
+    def processOrder(self):
+        for i in range(self.quantity):
+            OrderProcessor(self, self.factoryMapping)
 
 
 class OrderProcessor:
@@ -172,8 +195,9 @@ class OrderProcessor:
     OrderProcessor class that connects Orders to the factory.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, order, factoryMapping):
+        self.order = order
+        self.factoryMapping = factoryMapping
 
 
 def main():
