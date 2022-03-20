@@ -11,6 +11,35 @@ class Holiday(enum.Enum):
     EASTER = 2
 
 
+class Spider(enum.Enum):
+    """
+    This enum specifies the different distinct spider types.
+    """
+    TARANTULA = 0,
+    WOLF_SPIDER = 1
+
+
+class CandyFlavour(enum.Enum):
+    """
+    This enum specifies the different distinct Candy Flavour types.
+    """
+    SEA_SALT = 0,
+    REGULAR = 1
+
+
+class Colour(enum.Enum):
+    """
+    This enum specifies the different distinct colour types.
+    """
+    ORANGE = 0,
+    BLUE = 1,
+    PINK = 2,
+    WHITE = 3,
+    GREY = 4,
+    RED = 5,
+    GREEN = 6
+
+
 class Toys(abc.ABC):
     """
     Toys defines the interface for one of the products that the
@@ -24,6 +53,39 @@ class Toys(abc.ABC):
         self.product_id = product_id
         self.battery_operated = battery_operated
         self.recommended_age = recommended_age
+
+
+class SantaSWorkshop(Toys):
+    """
+    Santa's Workshop is a Toy
+    """
+    def __init__(self, dimensions_height, dimensions_width, number_of_rooms):
+        super().__init__("Santa's Workshop", "Santa's Workshop Description", "7", False, 6)
+        self.dimensions_height = dimensions_height
+        self.dimensions_width = dimensions_width
+        self.number_of_rooms = number_of_rooms
+
+
+class RCSpider(Toys):
+    """
+    RC (Remote Controlled) Spider is a Toy
+    """
+    def __init__(self, speed, jump_height, glow_in_the_dark):
+        super().__init__("RC (Remote Controlled) Spider", "RC (Remote Controlled) Spider Description", "8", True, 12)
+        self.speed = speed
+        self.jump_height = jump_height
+        self.glow_in_the_dark = glow_in_the_dark
+        self.type_of_spider = (Spider.TARANTULA, Spider.WOLF_SPIDER)
+
+
+class RobotBunny(Toys):
+    """
+    Robot Bunny is a Toy
+    """
+    def __init__(self, number_of_sound_effects):
+        super().__init__("Robot Bunny", "Robot Bunny Description", "9", True, 3)
+        self.number_of_sound_effects = number_of_sound_effects
+        self.colour = (Colour.ORANGE, Colour.BLUE, Colour.PINK)
 
 
 class StuffedAnimals(abc.ABC):
@@ -42,6 +104,33 @@ class StuffedAnimals(abc.ABC):
         self.fabric = fabric
 
 
+class DancingSkeleton(StuffedAnimals):
+    """
+    Dancing Skeleton is a Toy
+    """
+    def __init__(self, glow_in_the_dark):
+        super().__init__("Dancing Skeleton", "Dancing Skeleton Description", "4", "Polyester Fibrefill", "S", "Acrylic")
+        self.glow_in_the_dark = glow_in_the_dark
+
+
+class Reindeer(StuffedAnimals):
+    """
+    Reindeer is a Toy
+    """
+    def __init__(self, has_glow_in_the_dark_nose):
+        super().__init__("Reindeer", "Reindeer Description", "5", "Wool", "S", "Cotton")
+        self.has_glow_in_the_dark_nose = has_glow_in_the_dark_nose
+
+
+class EasterBunny(StuffedAnimals):
+    """
+    Easter Bunny is a Toy
+    """
+    def __init__(self):
+        super().__init__("Easter Bunny", "Easter Bunny Description", "6", "Polyester Fibrefill", "S", "Linen")
+        self.colour = (Colour.WHITE, Colour.GREY, Colour.PINK, Colour.BLUE)
+
+
 class Candy(abc.ABC):
     """
     Candy defines the interface for one of the products that the
@@ -56,12 +145,31 @@ class Candy(abc.ABC):
         self.lactose_free = lactose_free
 
 
-class CremeEggs(Candy):
+class PumpkinCaramelToffee(Candy):
     """
     CremeEggs is an Easter Candy
     """
     def __init__(self):
-        super().__init__("Creme Eggs", "Creme Eggs Candy", "111", True, True)
+        super().__init__("Pumpkin Caramel Toffee", "Pumpkin Caramel Toffee Description", "1", True, False)
+        self.candy_flavour = (CandyFlavour.REGULAR, CandyFlavour.SEA_SALT)
+
+
+class CandyCanes(Candy):
+    """
+    CremeEggs is an Easter Candy
+    """
+    def __init__(self):
+        super().__init__("Candy Canes", "Candy Canes Candy Description", "2", False, True)
+        self.candy_stripes = (Colour.RED, Colour.GREEN)
+
+
+class CremeEggs(Candy):
+    """
+    CremeEggs is an Easter Candy
+    """
+    def __init__(self, pack_size):
+        super().__init__("Creme Eggs", "Creme Eggs Candy", "3", True, False)
+        self.pack_size = pack_size
 
 
 class Inventory:
