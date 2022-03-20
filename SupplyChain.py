@@ -33,10 +33,13 @@ class StuffedAnimals(abc.ABC):
     """
 
     @abc.abstractmethod
-    def __init__(self, name, description, product_id, ):
+    def __init__(self, name, description, product_id, stuffing, size, fabric):
         self.name = name
         self.description = description
         self.product_id = product_id
+        self.stuffing = stuffing
+        self.size = size
+        self.fabric = fabric
 
 
 class Candy(abc.ABC):
@@ -45,13 +48,12 @@ class Candy(abc.ABC):
     abstract factory pattern is responsible to create.
     """
 
-    def __init__(self, name, description, product_id, stuffing, size, fabric):
+    def __init__(self, name, description, product_id, contain_nuts, lactose_free):
         self.name = name
         self.description = description
         self.product_id = product_id
-        self.stuffing = stuffing
-        self.size = size
-        self.fabric = fabric
+        self.contain_nuts = contain_nuts
+        self.lactose_free = lactose_free
 
 
 class Inventory:
