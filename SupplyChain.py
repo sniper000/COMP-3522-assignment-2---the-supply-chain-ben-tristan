@@ -56,6 +56,14 @@ class Candy(abc.ABC):
         self.lactose_free = lactose_free
 
 
+class CremeEggs(Candy):
+    """
+    CremeEggs is an Easter Candy
+    """
+    def __init__(self):
+        super().__init__("Creme Eggs", "Creme Eggs Candy", "111", True, True)
+
+
 class Inventory:
     """
     Inventory class that maintains inventory of gifts for storefront.
