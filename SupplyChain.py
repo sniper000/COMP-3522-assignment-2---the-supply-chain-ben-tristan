@@ -270,33 +270,33 @@ class Storefront:
         self.orders.append(order)
 
     def checkInventories(self):
-        print("which inventory would you like to check?")
-        print("________________________________________")
-        try:
-            inventoryInput = input(f"enter: \n"
-                                   f"0 for Toy \n"
-                                   f"1 for Stuffed Animal \n"
-                                   f"2 for Candy")
-            count = None
+        self.inventory.print()
+        if self.inventory.candyCount() > 10:
+            print("Candy is in stock")
+        if 10 > self.inventory.candyCount() > 3:
+            print("Candy is low in stock")
+        if 3 >= self.inventory.candyCount() > 0:
+            print("Candy is very low in stock")
+        if self.inventory.candyCount() == 0:
+            print("Candy is out of stock")
 
-            if inventoryInput == '0':
-                count = self.inventory.toyCount()
-            elif inventoryInput == '1':
-                count = self.inventory.stuffedAnimalCount()
-            elif inventoryInput == '2':
-                count = self.inventory.candyCount()
+        if self.inventory.toyCount() > 10:
+            print("Toys are in stock")
+        if 10 > self.inventory.toyCount() > 3:
+            print("Toys are low in stock")
+        if 3 >= self.inventory.toyCount() > 0:
+            print("Toys are very low in stock")
+        if self.inventory.toyCount() == 0:
+            print("Toys are out of stock")
 
-            if count >= 10:
-                print("in stock")
-            elif count == 0:
-                print("out of stock")
-            elif 10 > count > 3:
-                print("low stock")
-            elif 3 >= count > 0:
-                print("very low stock")
-
-        except ValueError:
-            print("invalid input")
+        if self.inventory.stuffedAnimalCount() > 10:
+            print("Stuffed Animals are in stock")
+        if 10 > self.inventory.stuffedAnimalCount() > 3:
+            print("Stuffed Animals are low in stock")
+        if 3 >= self.inventory.stuffedAnimalCount() > 0:
+            print("Stuffed Animals are very low in stock")
+        if self.inventory.stuffedAnimalCount() == 0:
+            print("Stuffed Animals are out of stock")
 
     def printDailyTransactions(self):
         with open('dailyTransactions.txt', 'w') as f:
@@ -367,6 +367,8 @@ class OrderProcessor:
             order_list.append(Order(factoryMapping, order_number,
                                     product_id, name, quantity, description, product_details))
 
+        print("Processing complete!")
+        print("returning to main menu: ")
         return order_list
 
 
