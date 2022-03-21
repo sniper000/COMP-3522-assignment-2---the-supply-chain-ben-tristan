@@ -68,11 +68,10 @@ class SantaSWorkshop(Toys):
     Santa's Workshop is a Christmas-themed Toy
     """
 
-    def __init__(self, dimensions_height, dimensions_width, number_of_rooms):
+    def __init__(self, dimensions, num_rooms):
         super().__init__("Santa's Workshop", "Santa's Workshop Description", "7", False, 6)
-        self.dimensions_height = dimensions_height
-        self.dimensions_width = dimensions_width
-        self.number_of_rooms = number_of_rooms
+        self.dimensions = dimensions
+        self.num_rooms = num_rooms
 
 
 class RCSpider(Toys):
@@ -80,11 +79,11 @@ class RCSpider(Toys):
     RC (Remote Controlled) Spider is a Halloween-themed Toy
     """
 
-    def __init__(self, speed, jump_height, glow_in_the_dark):
+    def __init__(self, speed, jump_height, has_glow):
         super().__init__("RC (Remote Controlled) Spider", "RC (Remote Controlled) Spider Description", "8", True, 12)
         self.speed = speed
         self.jump_height = jump_height
-        self.glow_in_the_dark = glow_in_the_dark
+        self.has_glow = has_glow
         self.type_of_spider = (Spider.TARANTULA, Spider.WOLF_SPIDER)
 
 
@@ -120,9 +119,9 @@ class DancingSkeleton(StuffedAnimals):
     Dancing Skeleton is a Halloween-themed Stuffed Animal
     """
 
-    def __init__(self, glow_in_the_dark):
+    def __init__(self, has_glow):
         super().__init__("Dancing Skeleton", "Dancing Skeleton Description", "4", "Polyester Fibrefill", "S", "Acrylic")
-        self.glow_in_the_dark = glow_in_the_dark
+        self.has_glow = has_glow
 
 
 class Reindeer(StuffedAnimals):
@@ -189,6 +188,106 @@ class CremeEggs(Candy):
         self.pack_size = pack_size
 
 
+class HolidayFactory(abc.ABC):
+    """
+    The base factory class. All worlds expect this factory class to
+    populate the world. The CharacterFactory class defines an interface
+    to create the a Product family consisting of Friendlies, Enemies,
+    and Animals. These vary by world.
+    """
+
+    @abc.abstractmethod
+    def create_toys(self, **kwargs) -> Toys:
+        pass
+
+    @abc.abstractmethod
+    def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
+        pass
+
+    @abc.abstractmethod
+    def create_candy(self, **kwargs) -> Candy:
+        pass
+
+
+class HalloweenFactory(HolidayFactory):
+    """
+    This factory class implements the CharacterFactory Interface. It
+    returns a product family consisting of RC Spider, Stuffed Animals, and
+    Pumpkin Caramel Toffee.
+    """
+
+    def create_toys(self, **kwargs) -> Toys:
+        """
+        :return: returns a RC Spider
+        """
+        for key, item in kwargs.items():
+            if key == "speed":
+                speed = item
+            if key == "jump_height":
+                jump_height = item
+            if key == "has_glow":
+                has_glow = item
+        return RCSpider(speed, jump_height, has_glow)
+
+    def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
+        """
+        :return: Returns a Dancing Skeleton
+        """
+        for key, item in kwargs.items():
+            if key == "has_glow":
+                has_glow = item
+        return DancingSkeleton(has_glow)
+
+    def create_candy(self, **kwargs) -> Candy:
+        """
+        :return: Returns a Pumpkin Caramel Toffee
+        """
+        return PumpkinCaramelToffee()
+
+
+class ChristmasFactory(HolidayFactory):
+    """
+    This factory class implements the CharacterFactory Interface. It
+    returns a product family consisting of RC Spider, Stuffed Animals, and
+    Pumpkin Caramel Toffee.
+    """
+
+    def create_toys(self, **kwargs) -> Toys:
+        """
+        :return: returns a Santa's Workshop
+        """
+        for key, item in kwargs.items():
+            if key == "name":
+                name = item
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
+            if key == "battery_operated":
+                battery_operated = item
+            if key == "recommended_age":
+                recommended_age = item
+            if key == "dimension":
+                dimension = item
+            if key == "num_rooms":
+                num_rooms = item
+        return SantaSWorkshop(name, description, product_id, battery_operated, recommended_age, dimension, num_rooms)
+
+    def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
+        """
+        :return: Returns a Reindeer
+        """
+        for key, item in kwargs.items():
+            if key == "has_glow":
+                has_glow = item
+        return Reindeer()
+
+    def create_candy(self, **kwargs) -> Candy:
+        """
+        :return: Returns a Pumpkin Caramel Toffee
+        """
+        return PumpkinCaramelToffee()
+
 class HolidayMapper:
     world_factory_mapper = {
         Holiday.HALLOWEEN: HalloweenFactory,
@@ -236,9 +335,11 @@ class Inventory:
         for i in range(quantity):
             self.toyInventory.append(item)
 
-    def addCandy(self, item, quantity):
-        for i in range(quantity):
-            self.toyInventory.append(item)
+    def addStuffedAnimal(self, item):
+        self.stuffedAnimalInventory.append(item)
+
+    def addCandy(self, item):
+        self.candyInventory.append(item)
 
     def toyCount(self):
         return int(len(self.toyInventory))
@@ -340,7 +441,7 @@ class Storefront:
         self.inventory.print()
         if self.inventory.candyCount() > 10:
             print("Candy is in stock")
-        if 10 >= self.inventory.candyCount() > 3:
+        if 10 > self.inventory.candyCount() > 3:
             print("Candy is low in stock")
         if 3 >= self.inventory.candyCount() > 0:
             print("Candy is very low in stock")
