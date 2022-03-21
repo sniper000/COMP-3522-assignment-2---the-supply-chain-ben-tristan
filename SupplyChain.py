@@ -189,6 +189,52 @@ class CremeEggs(Candy):
         self.pack_size = pack_size
 
 
+class HolidayFactory(abc.ABC):
+    """
+    The base factory class. All worlds expect this factory class to
+    populate the world. The CharacterFactory class defines an interface
+    to create the a Product family consisting of Friendlies, Enemies,
+    and Animals. These vary by world.
+    """
+
+    @abc.abstractmethod
+    def create_toys(self) -> Toys:
+        pass
+
+    @abc.abstractmethod
+    def create_stuffed_animals(self) -> StuffedAnimals:
+        pass
+
+    @abc.abstractmethod
+    def create_candy(self) -> Candy:
+        pass
+
+
+class HalloweenFactory(HolidayFactory):
+    """
+    This factory class implements the CharacterFactory Interface. It
+    returns a product family consisting of RC Spider, Stuffed Animals, and
+    Pumpkin Caramel Toffee.
+    """
+
+    def create_toys(self) -> Toys:
+        """
+        :return: returns a RC Spider
+        """
+        return RCSpider()
+
+    def create_stuffed_animals(self) -> StuffedAnimals:
+        """
+        :return: Returns a Dancing Skeleton
+        """
+        return DancingSkeleton()
+
+    def create_candy(self) -> Candy:
+        """
+        :return: Returns a Pumpkin Caramel Toffee
+        """
+        return PumpkinCaramelToffee()
+
 class Inventory:
     """
     Inventory class that maintains inventory of gifts for storefront.
