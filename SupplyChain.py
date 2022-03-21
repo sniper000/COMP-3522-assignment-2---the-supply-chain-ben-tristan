@@ -323,6 +323,23 @@ class EasterFactory(HolidayFactory):
                 pack_size = item
         return CremeEggs(pack_size)
 
+class HolidayMapper:
+    world_factory_mapper = {
+        Holiday.HALLOWEEN: HalloweenFactory,
+        Holiday.CHRISTMAS: ChristmasFactory,
+        Holiday.EASTER: EasterFactory
+    }
+
+    def get_factory(self, world_type: Holiday) -> HolidayFactory:
+        """
+        Retrieves the associated factory for the specified WorldEnum
+        :param world_type: WorldEnum
+        :return: a CharacterFactory if found, None otherwise
+        """
+        factory_class = self.world_factory_mapper.get(world_type)
+        return factory_class()
+
+
 class Inventory:
     """
     Inventory class that maintains inventory of gifts for storefront.
@@ -333,8 +350,25 @@ class Inventory:
         self.stuffedAnimalInventory = stuffedAnimalInventory
         self.candyInventory = candyInventory
 
-    def addToy(self, item):
-        self.toyInventory.append(item)
+    def removeToy(self, item, quantity):
+        for i in range(quantity):
+            self.toyInventory.remove(item)
+
+    def removeStuffedAnimal(self, item, quantity):
+        for i in range(quantity):
+            self.toyInventory.remove(item)
+
+    def removeCandy(self, item, quantity):
+        for i in range(quantity):
+            self.candyInventory.remove(item)
+
+    def addToy(self, item, quantity):
+        for i in range(quantity):
+            self.toyInventory.append(item)
+
+    def addStuffedAnimals(self, item, quantity):
+        for i in range(quantity):
+            self.toyInventory.append(item)
 
     def addStuffedAnimal(self, item):
         self.stuffedAnimalInventory.append(item)
@@ -375,8 +409,7 @@ class Storefront:
                 userInput = input(f"enter: \n"
                                   f"0 to process an order \n"
                                   f"1 to check current inventory \n"
-                                  f"2 to exit \n"
-                                  )
+                                  f"2 to exit \n")
 
                 if userInput == '0':
                     self.createOrder()
@@ -397,6 +430,42 @@ class Storefront:
         op = OrderProcessor()
         new_list = op.processOrder()
         for item in new_list:
+            holiday = item.get_factoryMapping()[0]
+            product = item.factoryMapping[1]
+            productID = item.get_productID()
+            quantity = item.getQuantity()
+            itemName = item.getItemName()
+            description = item.getDescription()
+            product_details = item.productDetails()
+
+            if product == Product.CANDY:
+
+                candy = CandyFactory()
+                if self.inventory.candyCount() > quantity:
+                    self.inventory.removeCandy(candy, quantity)
+                    print(f"successfully process: {item}")
+                else:
+                    self.inventory.addCandy(candy, 100)
+                    print(f"insufficient stock for: {item} ... restocking item!")
+
+            if product == Product.STUFFED_ANIMAL:
+                stuffedAnimals = stuffedAnimalFactory()
+                if self.inventory.stuffedAnimalCount() > quantity:
+                    self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
+                    print(f"successfully process: {item}")
+                else:
+                    self.inventory.addStuffedAnimals(stuffedAnimals, 100)
+                    print(f"insufficient stock for: {item} ... restocking item!")
+
+            if product == Product.TOY:
+                toys = toyFactory()
+                if self.inventory.toyCount() > quantity:
+                    self.inventory.removeStuffedAnimal(toys, quantity)
+                    print(f"successfully process: {item}")
+                else:
+                    self.inventory.addToys(toys, 100)
+                    print(f"insufficient stock for: {item} ... restocking item!")
+
             self.appendOrder(item)
             # print(item)
 
@@ -455,6 +524,27 @@ class Order:
     def __str__(self):
         return (f"Order {self.orderNumber}, Item {self.factoryMapping[1]}, Product Id {self.productId},"
                 f"Name {self.itemName}, Quantity {self.quantity} \n")
+
+    def get_factoryMapping(self):
+        return self.factoryMapping
+
+    def getOrderNumber(self):
+        return self.orderNumber
+
+    def getProductID(self):
+        return self.productId
+
+    def getItemName(self):
+        return self.itemName
+
+    def getQuantity(self):
+        return self.quantity
+
+    def getDescription(self):
+        return self.description
+
+    def getProductDetails(self):
+        return self.productDetails
 
 
 class OrderProcessor:
