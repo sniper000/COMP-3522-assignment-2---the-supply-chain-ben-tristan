@@ -235,6 +235,7 @@ class Storefront:
 
     def userMenu(self):
         print("welcome to the Web Store!")
+        print("_________________________")
         try:
             while True:
                 userInput = input(f"enter: \n"
@@ -244,7 +245,7 @@ class Storefront:
                                   )
 
                 if userInput == '0':
-                    self.processOrder()
+                    self.createOrder()
                 if userInput == '1':
                     self.checkInventories()
                 if userInput == '2':
@@ -256,16 +257,21 @@ class Storefront:
         except ValueError:
             print("invalid input")
 
-    def processOrder(self):
+    def createOrder(self):
         print(f"Creating a new order: \n")
+        print("_________________________")
         op = OrderProcessor()
-        op.createOrder()
+        new_list = op.processOrder()
+        for item in new_list:
+            self.appendOrder(item)
+            # print(item)
 
     def appendOrder(self, order):
         self.orders.append(order)
 
     def checkInventories(self):
         print("which inventory would you like to check?")
+        print("________________________________________")
         try:
             inventoryInput = input(f"enter: \n"
                                    f"0 for Toy \n"
@@ -295,7 +301,7 @@ class Storefront:
     def printDailyTransactions(self):
         with open('dailyTransactions.txt', 'w') as f:
             for order in self.orders:
-                f.write(order)
+                f.write(order.__str__())
 
 
 class Order:
@@ -303,17 +309,18 @@ class Order:
     Order class defines what product the user requires from the factory.
     """
 
-    def __init__(self, factoryMapping, orderNumber, productId, item, itemName, quantity, productDetails):
+    def __init__(self, factoryMapping, orderNumber, productId, itemName, quantity, description, productDetails):
         self.factoryMapping = factoryMapping
         self.orderNumber = orderNumber
         self.productId = productId
-        self.item = item
         self.itemName = itemName
         self.quantity = quantity
+        self.description = description
         self.productDetails = productDetails
 
     def __str__(self):
-        pass
+        return (f"Order {self.orderNumber}, Item {self.factoryMapping[1]}, Product Id {self.productId},"
+                f"Name {self.itemName}, Quantity {self.quantity} \n")
 
 
 class OrderProcessor:
@@ -324,10 +331,43 @@ class OrderProcessor:
     def __init__(self):
         pass
 
-    def createOrder(self):
-        filename = input("enter filename")
-        dfs = pd.read_excel(filename)
-        print(dfs)
+    def processOrder(self):
+        filename = input("enter filename: \n")
+        df_sheet_all = pd.read_excel(filename, sheet_name="Sheet1")
+        order_list = []
+        for i in range(0, len(df_sheet_all) - 1):
+            order = df_sheet_all.loc[i]
+            order_number = order['order_number']
+            holiday = order['holiday']
+            item = order['item']
+            name = order['name']
+            quantity = order['quantity']
+            product_id = order['product_id']
+            description = order['description']
+            factoryMapping = (holiday, item)
+            product_details = {
+                'has_batteries': order['has_batteries'],
+                'min_age': order['min_age'],
+                'dimensions': order['dimensions'],
+                'num_rooms': order['num_rooms'],
+                'speed': order['speed'],
+                'jump_height': order['jump_height'],
+                'has_glow': order['has_glow'],
+                'spider_type': order['spider_type'],
+                'num_sound': order['num_sound'],
+                'colour': order['colour'],
+                'has_lactose': order['has_lactose'],
+                'has_nuts': order['has_nuts'],
+                'variety': order['variety'],
+                'pack_size': order['pack_size'],
+                'stuffing': order['stuffing'],
+                'size': order['size'],
+                'fabric': order['fabric']
+            }
+            order_list.append(Order(factoryMapping, order_number,
+                                    product_id, name, quantity, description, product_details))
+
+        return order_list
 
 
 def main():
