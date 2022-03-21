@@ -245,57 +245,7 @@ class Storefront:
 
     def createOrder(self):
         print(f"Creating a new order: \n")
-        try:
-            holiday = int(input(f"Enter: \n"
-                                f"0 for Halloween \n"
-                                f"1 for Christmas \n"
-                                f"2 for Easter \n"))
 
-            factory_holiday = None
-
-            if holiday == '0':
-                factory_holiday = Holiday.HALLOWEEN
-            elif holiday == '1':
-                factory_holiday = Holiday.CHRISTMAS
-            elif holiday == '2':
-                factory_holiday = Holiday.EASTER
-
-            item = int(input(f'Enter: \n'
-                             f'0 for Toy \n'
-                             f'1 for Stuffed Animal \n'
-                             f'2 for Candy \n'))
-
-            factory_item = None
-            if item == '0':
-                factory_item = Product.TOY
-            elif item == '1':
-                factory_item = Product.STUFFED_ANIMAL
-            elif item == '2':
-                factory_item = Product.CANDY
-
-            factoryMapping = (factory_holiday, factory_item)
-            orderNum = int(input("Enter Order Number \n"))
-            productID = input("Enter product Id \n")
-            item = input("enter item \n")
-            itemName = input("enter item name \n")
-            quantity = int(input("enter quantity \n"))
-            productDetails = {}
-            order = Order(factoryMapping, orderNum, productID, item, itemName, quantity, productDetails)
-
-            if item == '0':
-                [self.inventory.addToy(item) for item in order.processOrder()]
-            elif item == '1':
-                [self.inventory.addStuffedAnimal(item) for item in order.processOrder()]
-            elif item == '2':
-                [self.inventory.addCandy(item) for item in order.processOrder()]
-
-            self.appendOrder(order)
-
-        except ValueError:
-            print("invalid input")
-
-            print("order complete!")
-            print(order)
 
     def appendOrder(self, order):
         self.orders.append(order)
@@ -347,7 +297,7 @@ class Order:
         self.productDetails = productDetails
 
     def processOrder(self):
-        return OrderProcessor(self, self.factoryMapping, self.productDetails).createOrder()
+        pass
 
     def __str__(self):
         pass
