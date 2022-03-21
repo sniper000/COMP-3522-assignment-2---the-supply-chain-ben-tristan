@@ -57,7 +57,7 @@ class Toys(abc.ABC):
 
 class SantaSWorkshop(Toys):
     """
-    Santa's Workshop is a Toy
+    Santa's Workshop is a Christmas-themed Toy
     """
     def __init__(self, dimensions_height, dimensions_width, number_of_rooms):
         super().__init__("Santa's Workshop", "Santa's Workshop Description", "7", False, 6)
@@ -68,7 +68,7 @@ class SantaSWorkshop(Toys):
 
 class RCSpider(Toys):
     """
-    RC (Remote Controlled) Spider is a Toy
+    RC (Remote Controlled) Spider is a Halloween-themed Toy
     """
     def __init__(self, speed, jump_height, glow_in_the_dark):
         super().__init__("RC (Remote Controlled) Spider", "RC (Remote Controlled) Spider Description", "8", True, 12)
@@ -80,7 +80,7 @@ class RCSpider(Toys):
 
 class RobotBunny(Toys):
     """
-    Robot Bunny is a Toy
+    Robot Bunny is an Easter-themed Toy
     """
     def __init__(self, number_of_sound_effects):
         super().__init__("Robot Bunny", "Robot Bunny Description", "9", True, 3)
@@ -106,7 +106,7 @@ class StuffedAnimals(abc.ABC):
 
 class DancingSkeleton(StuffedAnimals):
     """
-    Dancing Skeleton is a Toy
+    Dancing Skeleton is a Halloween-themed Stuffed Animal
     """
     def __init__(self, glow_in_the_dark):
         super().__init__("Dancing Skeleton", "Dancing Skeleton Description", "4", "Polyester Fibrefill", "S", "Acrylic")
@@ -115,7 +115,7 @@ class DancingSkeleton(StuffedAnimals):
 
 class Reindeer(StuffedAnimals):
     """
-    Reindeer is a Toy
+    Reindeer is a Christmas-themed Stuffed Animal
     """
     def __init__(self, has_glow_in_the_dark_nose):
         super().__init__("Reindeer", "Reindeer Description", "5", "Wool", "S", "Cotton")
@@ -124,7 +124,7 @@ class Reindeer(StuffedAnimals):
 
 class EasterBunny(StuffedAnimals):
     """
-    Easter Bunny is a Toy
+    Easter Bunny is an Easter-themed Stuffed Animal
     """
     def __init__(self):
         super().__init__("Easter Bunny", "Easter Bunny Description", "6", "Polyester Fibrefill", "S", "Linen")
@@ -147,7 +147,7 @@ class Candy(abc.ABC):
 
 class PumpkinCaramelToffee(Candy):
     """
-    CremeEggs is an Easter Candy
+    CremeEggs is a Halloween-themed Candy
     """
     def __init__(self):
         super().__init__("Pumpkin Caramel Toffee", "Pumpkin Caramel Toffee Description", "1", True, False)
@@ -156,7 +156,7 @@ class PumpkinCaramelToffee(Candy):
 
 class CandyCanes(Candy):
     """
-    CremeEggs is an Easter Candy
+    CremeEggs is a Christmas-themed Candy
     """
     def __init__(self):
         super().__init__("Candy Canes", "Candy Canes Candy Description", "2", False, True)
@@ -165,7 +165,7 @@ class CandyCanes(Candy):
 
 class CremeEggs(Candy):
     """
-    CremeEggs is an Easter Candy
+    CremeEggs is an Easter-themed Candy
     """
     def __init__(self, pack_size):
         super().__init__("Creme Eggs", "Creme Eggs Candy", "3", True, False)
