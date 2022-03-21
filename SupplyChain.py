@@ -11,6 +11,12 @@ class Holiday(enum.Enum):
     EASTER = 2
 
 
+class Product(enum.Enum):
+    TOY = 0,
+    STUFFED_ANIMAL = 1,
+    CANDY = 2
+
+
 class Toys(abc.ABC):
     """
     Toys defines the interface for one of the products that the
@@ -60,6 +66,7 @@ class CremeEggs(Candy):
     """
     CremeEggs is an Easter Candy
     """
+
     def __init__(self):
         super().__init__("Creme Eggs", "Creme Eggs Candy", "111", True, True)
 
@@ -111,19 +118,20 @@ class Storefront:
     def userMenu(self):
         print("welcome to the Web Store!")
         try:
-            userInput = input(f"enter: \n"
-                              f"0 to process an order \n"
-                              f"1 to check current inventory \n"
-                              f"2 to exit \n"
-                              )
+            while True:
+                userInput = input(f"enter: \n"
+                                  f"0 to process an order \n"
+                                  f"1 to check current inventory \n"
+                                  f"2 to exit \n"
+                                  )
 
-            if userInput == '0':
-                self.createOrder()
-            if userInput == '1':
-                self.checkInventories()
-            if userInput == '2':
-                print("thanks!")
-                exit(0)
+                if userInput == '0':
+                    self.createOrder()
+                if userInput == '1':
+                    self.checkInventories()
+                if userInput == '2':
+                    print("thanks!")
+                    exit(0)
 
         except ValueError:
             print("invalid input")
@@ -136,15 +144,52 @@ class Storefront:
                                 f"0 for Halloween \n"
                                 f"1 for Christmas \n"
                                 f"2 for Easter \n"))
+
+            factory_holiday = None
+
+            if holiday == '0':
+                factory_holiday = Holiday.HALLOWEEN
+            elif holiday == '1':
+                factory_holiday = Holiday.CHRISTMAS
+            elif holiday == '2':
+                factory_holiday = Holiday.EASTER
+
             item = int(input(f'Enter: \n'
                              f'0 for Toy \n'
                              f'1 for Stuffed Animal \n'
                              f'2 for Candy \n'))
-            factoryMapping = (holiday, item) #check
-            orderNum = int(input("Enter Order Number"))
-            productID = input("Enter product Id")
+
+            factory_item = None
+            if item == '0':
+                factory_item = Product.TOY
+            elif item == '1':
+                factory_item = Product.STUFFED_ANIMAL
+            elif item == '2':
+                factory_item = Product.CANDY
+
+            factoryMapping = (factory_holiday, factory_item)
+            orderNum = int(input("Enter Order Number \n"))
+            productID = input("Enter product Id \n")
+            item = input("enter item \n")
+            itemName = input("enter item name \n")
+            quantity = int(input("enter quantity \n"))
+            productDetails = {}
+            order = Order(factoryMapping, orderNum, productID, item, itemName, quantity, productDetails)
+
+            if item == '0':
+                [self.inventory.addToy(item) for item in order.processOrder()]
+            elif item == '1':
+                [self.inventory.addStuffedAnimal(item) for item in order.processOrder()]
+            elif item == '2':
+                [self.inventory.addCandy(item) for item in order.processOrder()]
+
+            self.appendOrder(order)
+
         except ValueError:
             print("invalid input")
+
+            print("order complete!")
+            print(order)
 
     def appendOrder(self, order):
         self.orders.append(order)
@@ -156,6 +201,8 @@ class Storefront:
                                    f"0 for Toy \n"
                                    f"1 for Stuffed Animal \n"
                                    f"2 for Candy")
+            count = None
+
             if inventoryInput == '0':
                 count = self.inventory.toyCount()
             elif inventoryInput == '1':
@@ -169,7 +216,7 @@ class Storefront:
                 print("out of stock")
             elif 10 > count > 3:
                 print("low stock")
-            elif 3 > count > 0:
+            elif 3 >= count > 0:
                 print("very low stock")
 
         except ValueError:
@@ -194,8 +241,10 @@ class Order:
         self.productDetails = productDetails
 
     def processOrder(self):
-        for i in range(self.quantity):
-            OrderProcessor(self, self.factoryMapping)
+        return OrderProcessor(self, self.factoryMapping, self.productDetails).createOrder()
+
+    def __str__(self):
+        pass
 
 
 class OrderProcessor:
@@ -203,9 +252,13 @@ class OrderProcessor:
     OrderProcessor class that connects Orders to the factory.
     """
 
-    def __init__(self, order, factoryMapping):
+    def __init__(self, order, factoryMapping, productDetails):
         self.order = order
         self.factoryMapping = factoryMapping
+        self.productDetails = productDetails
+
+    def createOrder(self):
+        return [CremeEggs, CremeEggs, CremeEggs]
 
 
 def main():
