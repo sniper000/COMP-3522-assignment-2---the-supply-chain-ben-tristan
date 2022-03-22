@@ -2,6 +2,7 @@ import abc
 import enum
 import pandas as pd
 import openpyxl
+from datetime import date
 
 
 class Holiday(enum.Enum):
@@ -288,20 +289,21 @@ class ChristmasFactory(HolidayFactory):
         """
         return PumpkinCaramelToffee()
 
+
 class HolidayMapper:
-    world_factory_mapper = {
+    holiday_mapper = {
         Holiday.HALLOWEEN: HalloweenFactory,
         Holiday.CHRISTMAS: ChristmasFactory,
         Holiday.EASTER: EasterFactory
     }
 
-    def get_factory(self, world_type: Holiday) -> HolidayFactory:
+    def get_factory(self, holiday_type: Holiday) -> HolidayFactory:
         """
-        Retrieves the associated factory for the specified WorldEnum
-        :param world_type: WorldEnum
-        :return: a CharacterFactory if found, None otherwise
+        Retrieves the associated factory for the specified HolidayEnum
+        :param holiday_type: holidayEnum
+        :return: a holidayFactory if found, None otherwise
         """
-        factory_class = self.world_factory_mapper.get(world_type)
+        factory_class = self.holiday_mapper.get(holiday_type)
         return factory_class()
 
 
@@ -467,7 +469,10 @@ class Storefront:
             print("Stuffed Animals are out of stock")
 
     def printDailyTransactions(self):
+        date_time = date.today().strftime("%b-%d-%Y")
         with open('dailyTransactions.txt', 'w') as f:
+            f.write("WEB STORE - Daily Transaction Report")
+            f.write(f"{date_time}")
             for order in self.orders:
                 f.write(order.__str__())
 
