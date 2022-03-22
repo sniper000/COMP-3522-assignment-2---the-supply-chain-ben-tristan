@@ -319,7 +319,7 @@ class EasterFactory(HolidayFactory):
                 name = item
         return EasterBunny(name)
 
-    def create_candy(self, **kwargs) -> Candy:
+    def create_candy(self, *kwargs) -> Candy:
         """
         :return: Returns a Creme Eggs
         """
@@ -446,6 +446,8 @@ class Storefront:
             itemName = item.getItemName()
             description = item.getDescription()
             product_details = item.getProductDetails()
+            print(product)
+
 
             holiday_map = None
             if holiday == "HALLOWEEN":
@@ -457,9 +459,22 @@ class Storefront:
 
             holiday_factory = HolidayMapper().get_factory(holiday_map)
 
-            if product == Product.CANDY:
+            if product == "Candy":
                 # set kwargs in create method
-                candy = holiday_factory.create_candy()
+
+                has_lactose = product_details.get("has_lactose")
+                has_nuts = product_details.get("has_nuts")
+                variety = product_details.get("variety")
+                pack_size = product_details.get("pack_size")
+                colour = product_details.get("colour")
+                details = {"name": itemName,
+                           "description": description,
+                           "product_id": productID,
+                           "contains_nuts": has_nuts,
+                           "lactose_free": has_lactose
+                           }
+
+                candy = holiday_factory.create_candy(**details)
 
                 if self.inventory.candyCount() > quantity:
                     self.inventory.removeCandy(candy, quantity)
@@ -468,28 +483,29 @@ class Storefront:
                     self.inventory.addCandy(candy, 100)
                     print(f"insufficient stock for: {item} ... restocking item!")
 
-            if product == Product.STUFFED_ANIMAL:
-                # set kwargs in create method
-                stuffedAnimals = holiday_factory.create_stuffed_animals()
-                if self.inventory.stuffedAnimalCount() > quantity:
-                    self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
-                    print(f"successfully process: {item}")
-                else:
-                    self.inventory.addStuffedAnimals(stuffedAnimals, 100)
-                    print(f"insufficient stock for: {item} ... restocking item!")
+            if product == "StuffedAnimal":
+                pass
 
-            if product == Product.TOY:
-                # set kwargs in create method
-                toys = holiday_factory.create_toys()
-                if self.inventory.toyCount() > quantity:
-                    self.inventory.removeStuffedAnimal(toys, quantity)
-                    print(f"successfully process: {item}")
-                else:
-                    self.inventory.addToys(toys, 100)
-                    print(f"insufficient stock for: {item} ... restocking item!")
+                #
+                # stuffedAnimals = holiday_factory.create_stuffed_animals()
+                # if self.inventory.stuffedAnimalCount() > quantity:
+                #     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
+                #     print(f"successfully process: {item}")
+                # else:
+                #     self.inventory.addStuffedAnimals(stuffedAnimals, 100)
+                #     print(f"insufficient stock for: {item} ... restocking item!")
+
+            if product == "Toy":
+                pass
+                # toys = holiday_factory.create_toys()
+                # if self.inventory.toyCount() > quantity:
+                #     self.inventory.removeStuffedAnimal(toys, quantity)
+                #     print(f"successfully process: {item}")
+                # else:
+                #     self.inventory.addToys(toys, 100)
+                #     print(f"insufficient stock for: {item} ... restocking item!")
 
             self.appendOrder(item)
-            # print(item)
 
     def appendOrder(self, order):
         self.orders.append(order)
