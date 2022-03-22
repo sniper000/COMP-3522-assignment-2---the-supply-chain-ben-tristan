@@ -287,7 +287,42 @@ class ChristmasFactory(HolidayFactory):
         """
         :return: Returns a Pumpkin Caramel Toffee
         """
-        return PumpkinCaramelToffee()
+        return CandyCanes()
+
+
+class EasterFactory(HolidayFactory):
+    """
+    This factory class implements the CharacterFactory Interface. It
+    returns a product family consisting of RC Spider, Stuffed Animals, and
+    Pumpkin Caramel Toffee.
+    """
+
+    def create_toys(self, **kwargs) -> Toys:
+        """
+        :return: returns a Robot Bunny
+        """
+        for key, item in kwargs.items():
+            if key == "speed":
+                speed = item
+        return RobotBunny()
+
+    def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
+        """
+        :return: Returns a Easter Bunny
+        """
+        for key, item in kwargs.items():
+            if key == "name":
+                name = item
+        return EasterBunny(name)
+
+    def create_candy(self, **kwargs) -> Candy:
+        """
+        :return: Returns a Creme Eggs
+        """
+        for key, item in kwargs.items():
+            if key == "pack_size":
+                pack_size = item
+        return CremeEggs(pack_size)
 
 
 class HolidayMapper:
