@@ -85,7 +85,7 @@ class RCSpider(Toys):
     """
 
     def __init__(self, speed, jump_height, has_glow):
-        super().__init__("RC (Remote Controlled) Spider", "RC (Remote Controlled) Spider Description", "8", True, 12)
+        super().__init__(self.name, self.description, self.product_id, True, 12)
         self.speed = speed
         self.jump_height = jump_height
         self.has_glow = has_glow
