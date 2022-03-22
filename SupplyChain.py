@@ -74,7 +74,7 @@ class SantaSWorkshop(Toys):
     """
 
     def __init__(self, dimensions, num_rooms):
-        super().__init__("Santa's Workshop", "Santa's Workshop Description", "7", False, 6)
+        super().__init__(self.name, self.description, self.product_id, self.battery_operated, self.recommended_age)
         self.dimensions = dimensions
         self.num_rooms = num_rooms
 
@@ -178,9 +178,9 @@ class CandyCanes(Candy):
     CremeEggs is a Christmas-themed Candy
     """
 
-    def __init__(self):
+    def __init__(self, candy_stripes):
         super().__init__("Candy Canes", "Candy Canes Candy Description", "2", False, True)
-        self.candy_stripes = (Colour.RED, Colour.GREEN)
+        self.candy_stripes = candy_stripes
 
 
 class CremeEggs(Candy):
@@ -291,7 +291,21 @@ class ChristmasFactory(HolidayFactory):
         """
         :return: Returns a Pumpkin Caramel Toffee
         """
-        return CandyCanes()
+        for key, item in kwargs.items():
+            if key == "name":
+                name = item
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
+            if key == "contains_nuts":
+                contain_nuts = item
+            if key == "lactose_free":
+                lactose_free = item
+            if key == "candy_stripes":
+                if item == Colour.RED or item == Colour.GREEN:
+                    candy_stripes = item
+        return CandyCanes(name, description, product_id, contain_nuts, lactose_free, candy_stripes)
 
 
 class EasterFactory(HolidayFactory):
