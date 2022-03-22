@@ -440,9 +440,10 @@ class Storefront:
             description = item.getDescription()
             product_details = item.productDetails()
 
-            if product == Product.CANDY:
+            holiday_factory = HolidayFactory(holiday)
 
-                candy = CandyFactory()
+            if product == Product.CANDY:
+                candy = holiday_factory.create_candy()
                 if self.inventory.candyCount() > quantity:
                     self.inventory.removeCandy(candy, quantity)
                     print(f"successfully process: {item}")
@@ -451,7 +452,7 @@ class Storefront:
                     print(f"insufficient stock for: {item} ... restocking item!")
 
             if product == Product.STUFFED_ANIMAL:
-                stuffedAnimals = stuffedAnimalFactory()
+                stuffedAnimals = holiday_factory.create_stuffed_animals()
                 if self.inventory.stuffedAnimalCount() > quantity:
                     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
                     print(f"successfully process: {item}")
@@ -460,7 +461,7 @@ class Storefront:
                     print(f"insufficient stock for: {item} ... restocking item!")
 
             if product == Product.TOY:
-                toys = toyFactory()
+                toys = holiday_factory.create_toys()
                 if self.inventory.toyCount() > quantity:
                     self.inventory.removeStuffedAnimal(toys, quantity)
                     print(f"successfully process: {item}")
