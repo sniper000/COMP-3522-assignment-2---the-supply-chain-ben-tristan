@@ -73,8 +73,8 @@ class SantaSWorkshop(Toys):
     Santa's Workshop is a Christmas-themed Toy
     """
 
-    def __init__(self, dimensions, num_rooms):
-        super().__init__(self.name, self.description, self.product_id, self.battery_operated, self.recommended_age)
+    def __init__(self, name, description, product_id, battery_operated, recommended_age, dimensions, num_rooms):
+        super().__init__(name, description, product_id, battery_operated, recommended_age)
         self.dimensions = dimensions
         self.num_rooms = num_rooms
 
