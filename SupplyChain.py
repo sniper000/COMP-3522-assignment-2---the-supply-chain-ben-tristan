@@ -1,17 +1,21 @@
 import abc
 import enum
+import string
+
 import pandas as pd
 import openpyxl
 from datetime import date
+
+from numpy.core.defchararray import upper
 
 
 class Holiday(enum.Enum):
     """
     enumerated class to define different holidays.
     """
-    HALLOWEEN = 0,
-    CHRISTMAS = 1,
-    EASTER = 2
+    HALLOWEEN = "HALLOWEEN",
+    CHRISTMAS = "CHRISTMAS",
+    EASTER = "EASTER"
 
 
 class Spider(enum.Enum):
@@ -326,6 +330,9 @@ class EasterFactory(HolidayFactory):
 
 
 class HolidayMapper:
+    """
+    class that maps different enums to different factories.
+    """
     holiday_mapper = {
         Holiday.HALLOWEEN: HalloweenFactory,
         Holiday.CHRISTMAS: ChristmasFactory,
@@ -432,18 +439,28 @@ class Storefront:
         op = OrderProcessor()
         new_list = op.processOrder()
         for item in new_list:
-            holiday = item.get_factoryMapping()[0]
+            holiday = upper(item.get_factoryMapping()[0])
             product = item.factoryMapping[1]
-            productID = item.get_productID()
+            productID = item.getProductID()
             quantity = item.getQuantity()
             itemName = item.getItemName()
             description = item.getDescription()
-            product_details = item.productDetails()
+            product_details = item.getProductDetails()
 
-            holiday_factory = HolidayFactory(holiday)
+            holiday_map = None
+            if holiday == "HALLOWEEN":
+                holiday_map = Holiday.HALLOWEEN
+            if holiday == "CHRISTMAS":
+                holiday_map = Holiday.CHRISTMAS
+            if holiday == "EASTER":
+                holiday_map = Holiday.EASTER
+
+            holiday_factory = HolidayMapper().get_factory(holiday_map)
 
             if product == Product.CANDY:
+                # set kwargs in create method
                 candy = holiday_factory.create_candy()
+
                 if self.inventory.candyCount() > quantity:
                     self.inventory.removeCandy(candy, quantity)
                     print(f"successfully process: {item}")
@@ -452,6 +469,7 @@ class Storefront:
                     print(f"insufficient stock for: {item} ... restocking item!")
 
             if product == Product.STUFFED_ANIMAL:
+                # set kwargs in create method
                 stuffedAnimals = holiday_factory.create_stuffed_animals()
                 if self.inventory.stuffedAnimalCount() > quantity:
                     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
@@ -461,6 +479,7 @@ class Storefront:
                     print(f"insufficient stock for: {item} ... restocking item!")
 
             if product == Product.TOY:
+                # set kwargs in create method
                 toys = holiday_factory.create_toys()
                 if self.inventory.toyCount() > quantity:
                     self.inventory.removeStuffedAnimal(toys, quantity)
