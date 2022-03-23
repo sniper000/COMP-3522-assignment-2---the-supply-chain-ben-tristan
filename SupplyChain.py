@@ -599,12 +599,13 @@ class Storefront:
                 number_of_sound_effects = product_details.get("num_sound")
 
                 toys = holiday_factory.create_toys(name=itemName, description=description, product_id=productID,
-                                                   has_batteries=battery_operated, recommended_age=recommended_age,
+                                                   has_batteries=battery_operated, min_age=recommended_age,
                                                    dimension=dimensions, num_rooms=num_rooms, speed=speed,
                                                    jump_height=jump_height, spider_type=spider_type,
                                                    number_of_sound_effects=number_of_sound_effects)
 
                 if self.inventory.toyCount() > quantity:
+                    print("sufficent!")
                     self.inventory.removeStuffedAnimal(toys, quantity)
                     try:
                         print("appending order...")
