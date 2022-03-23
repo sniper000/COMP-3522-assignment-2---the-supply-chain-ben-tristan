@@ -243,7 +243,7 @@ class HalloweenFactory(HolidayFactory):
                 if item == Spider.WOLF_SPIDER or item == Spider.TARANTULA:
                     spider_type = item
         return RCSpider(name, description, product_id, speed, jump_height, has_glow,
-                 spider_type)
+                        spider_type)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
@@ -445,6 +445,8 @@ class Storefront:
                                   f"1 to check current inventory \n"
                                   f"2 to exit \n")
 
+                if userInput == '':
+                    pass
                 if userInput == '0':
                     self.createOrder()
                 if userInput == '1':
@@ -471,8 +473,6 @@ class Storefront:
             itemName = item.getItemName()
             description = item.getDescription()
             product_details = item.getProductDetails()
-            print(product)
-
 
             holiday_map = None
             if holiday == "HALLOWEEN":
@@ -485,28 +485,30 @@ class Storefront:
             holiday_factory = HolidayMapper().get_factory(holiday_map)
 
             if product == "Candy":
-                pass
                 # name, description, product_id, contain_nuts, lactose_free, candy_stripes
-                # has_lactose = product_details.get("has_lactose")
-                # has_nuts = product_details.get("has_nuts")
-                # variety = product_details.get("variety")
-                # pack_size = product_details.get("pack_size")
-                # colour = product_details.get("colour")
-                # details = {"name": itemName,
-                #            "description": description,
-                #            "product_id": productID,
-                #            "contains_nuts": has_nuts,
-                #            "lactose_free": has_lactose
-                #            }
-                #
-                # # candy = holiday_factory.create_candy(name=itemName, description=description, product_id = productID)
-                #
-                # if self.inventory.candyCount() > quantity:
-                #     self.inventory.removeCandy(candy, quantity)
-                #     print(f"successfully process: {item}")
-                # else:
-                #     self.inventory.addCandy(candy, 100)
-                #     print(f"insufficient stock for: {item} ... restocking item!")
+                has_lactose = product_details.get("has_lactose")
+                has_nuts = product_details.get("has_nuts")
+                variety = product_details.get("variety")
+                pack_size = product_details.get("pack_size")
+                colour = product_details.get("colour")
+                details = {"name": itemName,
+                           "description": description,
+                           "product_id": productID,
+                           "contains_nuts": has_nuts,
+                           "lactose_free": has_lactose
+                           }
+
+                candy = holiday_factory.create_candy(name=itemName, description=description, product_id = productID,
+                                                     contains_nuts=has_nuts, lactose_free= has_lactose,
+                                                     candy_stripes=colour)
+
+                if self.inventory.candyCount() > quantity:
+                    self.inventory.removeCandy(candy, quantity)
+                    self.appendOrder(item)
+                    print(f"successfully process: {item}")
+                else:
+                    self.inventory.addCandy(candy, 100)
+                    print(f"insufficient stock for: {item} ... restocking item!")
 
             if product == "StuffedAnimal":
                 pass
@@ -531,12 +533,11 @@ class Storefront:
                                                    dimension=dimensions, num_rooms=num_rooms)
                 if self.inventory.toyCount() > quantity:
                     self.inventory.removeStuffedAnimal(toys, quantity)
+                    self.appendOrder(item)
                     print(f"successfully process: {item}")
                 else:
                     self.inventory.addToys(toys, 100)
                     print(f"insufficient stock for: {item} ... restocking item!")
-
-            self.appendOrder(item)
 
     def appendOrder(self, order):
         self.orders.append(order)
@@ -573,8 +574,8 @@ class Storefront:
     def printDailyTransactions(self):
         date_time = date.today().strftime("%b-%d-%Y")
         with open('dailyTransactions.txt', 'w') as f:
-            f.write("WEB STORE - Daily Transaction Report")
-            f.write(f"{date_time}")
+            f.write("WEB STORE - Daily Transaction Report \n")
+            f.write(f"{date_time} \n")
             for order in self.orders:
                 f.write(order.__str__())
 
@@ -664,7 +665,6 @@ class OrderProcessor:
                                     product_id, name, quantity, description, product_details))
 
         print("Processing complete!")
-        print("returning to main menu: ")
         return order_list
 
 
