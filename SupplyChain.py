@@ -385,7 +385,7 @@ class Inventory:
         for i in range(quantity):
             self.candyInventory.remove(item)
 
-    def addToy(self, item, quantity):
+    def addToys(self, item, quantity):
         for i in range(quantity):
             self.toyInventory.append(item)
 
@@ -474,8 +474,8 @@ class Storefront:
             holiday_factory = HolidayMapper().get_factory(holiday_map)
 
             if product == "Candy":
-                # set kwargs in create method
                 pass
+                # name, description, product_id, contain_nuts, lactose_free, candy_stripes
                 # has_lactose = product_details.get("has_lactose")
                 # has_nuts = product_details.get("has_nuts")
                 # variety = product_details.get("variety")
@@ -488,7 +488,7 @@ class Storefront:
                 #            "lactose_free": has_lactose
                 #            }
                 #
-                # candy = holiday_factory.create_candy(**details)
+                # # candy = holiday_factory.create_candy(name=itemName, description=description, product_id = productID)
                 #
                 # if self.inventory.candyCount() > quantity:
                 #     self.inventory.removeCandy(candy, quantity)
