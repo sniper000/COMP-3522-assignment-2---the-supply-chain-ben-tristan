@@ -416,7 +416,7 @@ class EasterFactory(HolidayFactory):
             # (Colour.WHITE, Colour.GREY, Colour.PINK, Colour.BLUE)
         return EasterBunny(name, description, product_id, stuffing, size, fabric, colour)
 
-    def create_candy(self, *kwargs) -> Candy:
+    def create_candy(self, **kwargs) -> Candy:
         """
         :return: Returns a Creme Eggs
         """
