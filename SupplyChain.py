@@ -507,22 +507,16 @@ class Storefront:
             holiday_factory = HolidayMapper().get_factory(holiday_map)
 
             if product == "Candy":
-                # name, description, product_id, contain_nuts, lactose_free, candy_stripes
+                # # name, description, product_id, contain_nuts, lactose_free, candy_stripes
                 has_lactose = product_details.get("has_lactose")
                 has_nuts = product_details.get("has_nuts")
                 variety = product_details.get("variety")
                 pack_size = product_details.get("pack_size")
                 colour = product_details.get("colour")
-                details = {"name": itemName,
-                           "description": description,
-                           "product_id": productID,
-                           "contains_nuts": has_nuts,
-                           "lactose_free": has_lactose
-                           }
 
                 candy = holiday_factory.create_candy(name=itemName, description=description, product_id = productID,
                                                      contains_nuts=has_nuts, lactose_free= has_lactose,
-                                                     candy_stripes=colour)
+                                                     candy_stripes=colour, variety = variety, pack_size=pack_size)
 
                 if self.inventory.candyCount() > quantity:
                     self.inventory.removeCandy(candy, quantity)
@@ -533,26 +527,30 @@ class Storefront:
                     print(f"insufficient stock for: {item} ... restocking item!")
 
             if product == "StuffedAnimal":
-                pass
-
-                #
-                # stuffedAnimals = holiday_factory.create_stuffed_animals()
-                # if self.inventory.stuffedAnimalCount() > quantity:
-                #     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
-                #     print(f"successfully process: {item}")
-                # else:
-                #     self.inventory.addStuffedAnimals(stuffedAnimals, 100)
-                #     print(f"insufficient stock for: {item} ... restocking item!")
+                stuffedAnimals = holiday_factory.create_stuffed_animals()
+                if self.inventory.stuffedAnimalCount() > quantity:
+                    self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
+                    print(f"successfully process: {item}")
+                else:
+                    self.inventory.addStuffedAnimals(stuffedAnimals, 100)
+                    print(f"insufficient stock for: {item} ... restocking item!")
 
             if product == "Toy":
-                # name, description, product_id, battery_operated, recommended_age, dimension, num_rooms
                 battery_operated = product_details.get("battery_operated")
                 recommended_age = product_details.get("recommended_age")
                 dimensions = product_details.get("dimensions")
                 num_rooms = product_details.get("num_rooms")
+                speed = product_details.get("speed")
+                jump_height = product_details.get("jump_height")
+                spider_type = product_details.get("spider_type")
+                number_of_sound_effects = product_details.get("num_sound")
+
                 toys = holiday_factory.create_toys(name=itemName, description=description, product_id=productID,
                                                    battery_operated=battery_operated, recommended_age=recommended_age,
-                                                   dimension=dimensions, num_rooms=num_rooms)
+                                                   dimension=dimensions, num_rooms=num_rooms, speed=speed,
+                                                   jump_height=jump_height, spider_type=spider_type,
+                                                   number_of_sound_effects=number_of_sound_effects)
+
                 if self.inventory.toyCount() > quantity:
                     self.inventory.removeStuffedAnimal(toys, quantity)
                     self.appendOrder(item)
