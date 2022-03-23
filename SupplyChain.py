@@ -85,12 +85,12 @@ class RCSpider(Toys):
     """
 
     def __init__(self, name, description, product_id, battery_operated, recommended_age, speed, jump_height, has_glow,
-                 type_of_spider):
+                 spider_type):
         super().__init__(name, description, product_id, battery_operated, recommended_age)
         self.speed = speed
         self.jump_height = jump_height
         self.has_glow = has_glow
-        self.type_of_spider = type_of_spider
+        self.spider_type = spider_type
 
 
 class RobotBunny(Toys):
@@ -98,10 +98,11 @@ class RobotBunny(Toys):
     Robot Bunny is an Easter-themed Toy
     """
 
-    def __init__(self, number_of_sound_effects):
-        super().__init__("Robot Bunny", "Robot Bunny Description", "9", True, 3)
+    def __init__(self, name, description, product_id, battery_operated, recommended_age, number_of_sound_effects, colour
+                 ):
+        super().__init__(name, description, product_id, battery_operated, recommended_age)
         self.number_of_sound_effects = number_of_sound_effects
-        self.colour = (Colour.ORANGE, Colour.BLUE, Colour.PINK)
+        self.colour = colour
 
 
 class StuffedAnimals(abc.ABC):
@@ -179,7 +180,7 @@ class CandyCanes(Candy):
     CremeEggs is a Christmas-themed Candy
     """
 
-    def __init__(self, candy_stripes):
+    def __init__(self, name, description, product_id, contain_nuts, lactose_free, candy_stripes):
         super().__init__("Candy Canes", "Candy Canes Candy Description", "2", False, True)
         self.candy_stripes = candy_stripes
 
@@ -331,9 +332,24 @@ class EasterFactory(HolidayFactory):
         :return: returns a Robot Bunny
         """
         for key, item in kwargs.items():
-            if key == "speed":
-                speed = item
-        return RobotBunny()
+            if key == "name":
+                name = item
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
+            if key == "battery_operated":
+                battery_operated = item
+            if key == "recommended_age":
+                recommended_age = item
+            if key == "number_of_sound_effects":
+                number_of_sound_effects = item
+            if key == "colour":
+                if item == Colour.ORANGE or item == Colour.BLUE or item == Colour.PINK:
+                    colour = item
+                number_of_sound_effects = item
+        return RobotBunny(name, description, product_id, battery_operated, recommended_age, number_of_sound_effects,
+                          colour)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
@@ -349,9 +365,15 @@ class EasterFactory(HolidayFactory):
         :return: Returns a Creme Eggs
         """
         for key, item in kwargs.items():
+            if key == "name":
+                name = item
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
             if key == "pack_size":
                 pack_size = item
-        return CremeEggs(pack_size)
+        return CremeEggs(name, description, product_id, pack_size)
 
 
 class HolidayMapper:
