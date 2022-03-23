@@ -466,41 +466,52 @@ class Inventory:
         self.stuffedAnimalInventory = stuffedAnimalInventory
         self.candyInventory = candyInventory
 
-    def countItemsToys(self, item):
+    def countItemsToys(self, name):
         i = 0
 
-        for item in self.toyInventory:
-            i = +1
-
+        for toy in self.toyInventory:
+            if toy.name == name:
+                i += 1
         return i
 
-    def countItemsAnimals(self, item):
+    def countItemsAnimals(self, name):
         i = 0
 
-        for item in self.toyInventory:
-            i = +1
-
+        for animal in self.stuffedAnimalInventory:
+            if animal.name == name:
+                i += 1
         return i
 
-    def countItemsCandy(self, item):
+    def countItemsCandy(self, name):
         i = 0
 
-        for item in self.toyInventory:
-            i = +1
-
+        for candy in self.candyInventory:
+            if candy.name == name:
+                i += 1
         return i
 
     def removeToy(self, item, quantity):
         for i in range(quantity):
-            self.toyInventory.remove(item)
+            for toy in self.toyInventory:
+                if item.name == toy.name:
+                    self.toyInventory.remove(toy)
+                break
 
     def removeStuffedAnimal(self, item, quantity):
         for i in range(quantity):
-            self.stuffedAnimalInventory.remove(item)
+            for animals in self.stuffedAnimalInventory:
+                if item.name == animals.name:
+                    self.stuffedAnimalInventory.remove(animals)
+                break
 
     def removeCandy(self, item, quantity):
-        for i in range(quantity):
-            self.candyInventory.remove(item)
+        i = int(quantity)
+        for candy in self.candyInventory:
+            if i == 0:
+                return
+            if item.name == candy.name:
+                i -= 1
+                self.candyInventory.remove(candy)
 
     def addToys(self, item, quantity):
         for i in range(quantity):
@@ -525,9 +536,9 @@ class Inventory:
 
     def print(self):
         print("Printing inventory: ")
-        [print(item) for item in self.toyInventory]
-        [print(item) for item in self.stuffedAnimalInventory]
-        [print(item) for item in self.candyInventory]
+        [print(item.name) for item in self.toyInventory]
+        [print(item.name) for item in self.stuffedAnimalInventory]
+        [print(item.name) for item in self.candyInventory]
 
 
 class Storefront:
@@ -552,6 +563,7 @@ class Storefront:
                 if userInput == '0':
                     self.createOrder()
                 if userInput == '1':
+                    self.inventory.print()
                     self.checkInventories()
                 if userInput == '2':
                     print("writing daily transactions...")
@@ -593,13 +605,15 @@ class Storefront:
                 variety = product_details.get("variety")
                 pack_size = product_details.get("pack_size")
                 colour = product_details.get("colour")
-                # name, description, product_id, has_nuts, has_lactose, pack_size, colour, variety
+
                 candy = holiday_factory.create_candy(name=name, description=description, product_id=productID,
                                                      has_nuts=has_nuts, has_lactose=has_lactose,
                                                      colour=colour, variety=variety, pack_size=pack_size)
 
-                count = self.inventory.countItemsCandy(candy)
-                if count > quantity:
+                count = self.inventory.countItemsCandy(candy.name)
+
+                if count > int(quantity):
+                    print("processing order...")
                     self.inventory.removeCandy(candy, quantity)
                     print(f"successfully process: {item}")
                 else:
@@ -617,8 +631,10 @@ class Storefront:
                                                                         stuffing=stuffing, size=size, fabric=fabric,
                                                                         has_glow=has_glow)
 
-                count = self.inventory.countItemsAnimals(stuffedAnimals)
-                if count > quantity:
+                count = self.inventory.countItemsAnimals(stuffedAnimals.name)
+
+                if count > int(quantity):
+                    print("processing order...")
                     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
                     print(f"successfully processed : {item}")
                 else:
@@ -642,10 +658,12 @@ class Storefront:
                                                    dimension=dimensions, num_rooms=num_rooms, speed=speed,
                                                    jump_height=jump_height, spider_type=spider_type,
                                                    num_sound=number_of_sound_effects, colour=colour, has_glow=has_glow)
-                count = self.inventory.countItemsToys(toys)
-                if count > quantity:
+                count = self.inventory.countItemsToys(toys.name)
+
+                if count > int(quantity):
+                    print("processing order...")
                     self.inventory.removeStuffedAnimal(toys, quantity)
-                    print(f"successfully process: {item}")
+                    print(f"successfully processed: {item}")
                 else:
                     self.inventory.addToys(toys, 100)
                     print(f"insufficient stock for: {item} ... restocking item!")
@@ -656,7 +674,6 @@ class Storefront:
         self.orders.append(order)
 
     def checkInventories(self):
-        self.inventory.print()
         if self.inventory.candyCount() > 10:
             print("Candy is in stock")
         if 10 > self.inventory.candyCount() > 3:
