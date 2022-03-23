@@ -60,11 +60,11 @@ class Toys(abc.ABC):
     """
 
     @abc.abstractmethod
-    def __init__(self, name, description, product_id, battery_operated, recommended_age):
+    def __init__(self, name, description, product_id, has_batteries, recommended_age):
         self.name = name
         self.description = description
         self.product_id = product_id
-        self.battery_operated = battery_operated
+        self.has_batteries = has_batteries
         self.recommended_age = recommended_age
 
 
@@ -73,8 +73,8 @@ class SantaSWorkshop(Toys):
     Santa's Workshop is a Christmas-themed Toy
     """
 
-    def __init__(self, name, description, product_id, battery_operated, recommended_age, dimensions, num_rooms):
-        super().__init__(name, description, product_id, battery_operated, recommended_age)
+    def __init__(self, name, description, product_id, has_batteries, recommended_age, dimensions, num_rooms):
+        super().__init__(name, description, product_id, has_batteries, recommended_age)
         self.dimensions = dimensions
         self.num_rooms = num_rooms
 
@@ -84,9 +84,9 @@ class RCSpider(Toys):
     RC (Remote Controlled) Spider is a Halloween-themed Toy
     """
 
-    def __init__(self, name, description, product_id, battery_operated, recommended_age, speed, jump_height, has_glow,
+    def __init__(self, name, description, product_id, has_batteries, recommended_age, speed, jump_height, has_glow,
                  spider_type):
-        super().__init__(name, description, product_id, battery_operated, recommended_age)
+        super().__init__(name, description, product_id, has_batteries, recommended_age)
         self.speed = speed
         self.jump_height = jump_height
         self.has_glow = has_glow
@@ -98,9 +98,9 @@ class RobotBunny(Toys):
     Robot Bunny is an Easter-themed Toy
     """
 
-    def __init__(self, name, description, product_id, battery_operated, recommended_age, number_of_sound_effects, colour
+    def __init__(self, name, description, product_id, has_batteries, recommended_age, number_of_sound_effects, colour
                  ):
-        super().__init__(name, description, product_id, battery_operated, recommended_age)
+        super().__init__(name, description, product_id, has_batteries, recommended_age)
         self.number_of_sound_effects = number_of_sound_effects
         self.colour = colour
 
@@ -280,15 +280,15 @@ class ChristmasFactory(HolidayFactory):
                 description = item
             if key == "product_id":
                 product_id = item
-            if key == "battery_operated":
-                battery_operated = item
+            if key == "has_batteries":
+                has_batteries = item
             if key == "recommended_age":
                 recommended_age = item
             if key == "dimension":
                 dimension = item
             if key == "num_rooms":
                 num_rooms = item
-        return SantaSWorkshop(name, description, product_id, battery_operated, recommended_age, dimension, num_rooms)
+        return SantaSWorkshop(name, description, product_id, has_batteries, recommended_age, dimension, num_rooms)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
