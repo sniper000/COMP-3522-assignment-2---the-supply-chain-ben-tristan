@@ -234,6 +234,10 @@ class HalloweenFactory(HolidayFactory):
                 description = item
             if key == "product_id":
                 product_id = item
+            if key == "product_id":
+                has_batteries = item
+            if key == "product_id":
+                recommended_age = item
             if key == "speed":
                 speed = item
             if key == "jump_height":
@@ -243,7 +247,7 @@ class HalloweenFactory(HolidayFactory):
             if key == "spider_type":
                 if item == Spider.WOLF_SPIDER or item == Spider.TARANTULA:
                     spider_type = item
-        return RCSpider(name, description, product_id, speed, jump_height, has_glow,
+        return RCSpider(name, description, product_id, has_batteries, recommended_age, speed, jump_height, has_glow,
                  spider_type)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
@@ -338,8 +342,8 @@ class EasterFactory(HolidayFactory):
                 description = item
             if key == "product_id":
                 product_id = item
-            if key == "battery_operated":
-                battery_operated = item
+            if key == "has_batteries":
+                has_batteries = item
             if key == "recommended_age":
                 recommended_age = item
             if key == "num_sound":
@@ -347,7 +351,7 @@ class EasterFactory(HolidayFactory):
             if key == "colour":
                 if item == Colour.ORANGE or item == Colour.BLUE or item == Colour.PINK:
                     colour = item
-        return RobotBunny(name, description, product_id, battery_operated, recommended_age, num_sound,
+        return RobotBunny(name, description, product_id, has_batteries, recommended_age, num_sound,
                           colour)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
