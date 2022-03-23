@@ -245,10 +245,10 @@ class HalloweenFactory(HolidayFactory):
             if key == "has_glow":
                 has_glow = item
             if key == "spider_type":
-                if item == Spider.WOLF_SPIDER or item == Spider.TARANTULA:
-                    spider_type = item
+                spider_type = item
+                # if item == Spider.WOLF_SPIDER or item == Spider.TARANTULA:
         return RCSpider(name, description, product_id, has_batteries, min_age, speed, jump_height, has_glow,
-                 spider_type)
+                        spider_type)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
@@ -451,6 +451,30 @@ class Inventory:
         self.stuffedAnimalInventory = stuffedAnimalInventory
         self.candyInventory = candyInventory
 
+    def countItemsToys(self, item):
+        i = 0
+
+        for item in self.toyInventory:
+            i = +1
+
+        return i
+
+    def countItemsAnimals(self, item):
+        i = 0
+
+        for item in self.toyInventory:
+            i = +1
+
+        return i
+
+    def countItemsCandy(self, item):
+        i = 0
+
+        for item in self.toyInventory:
+            i = +1
+
+        return i
+
     def removeToy(self, item, quantity):
         for i in range(quantity):
             self.toyInventory.remove(item)
@@ -540,7 +564,6 @@ class Storefront:
             product_details = item.getProductDetails()
             print(product)
 
-
             holiday_map = None
             if holiday == "HALLOWEEN":
                 holiday_map = Holiday.HALLOWEEN
@@ -562,9 +585,10 @@ class Storefront:
 
                 candy = holiday_factory.create_candy(name=itemName, description=description, product_id=productID,
                                                      contains_nuts=has_nuts, lactose_free=has_lactose,
-                                                     candy_stripes=colour, variety=variety, pack_size=pack_size)
+                                                     colour=colour, variety=variety, pack_size=pack_size)
 
-                if self.inventory.candyCount() > quantity:
+                count = self.inventory.countItemsToys(toys)
+                if count > quantity:
                     self.inventory.removeCandy(candy, quantity)
 
                     try:
@@ -587,7 +611,9 @@ class Storefront:
                 stuffedAnimals = holiday_factory.create_stuffed_animals(name=itemName, description=description,
                                                                         product_id=productID, colour=colour,
                                                                         stuffing=stuffing, size=size, fabric=fabric)
-                if self.inventory.stuffedAnimalCount() > quantity:
+
+                count = self.inventory.countItemsToys(toys)
+                if count > quantity:
                     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
                     try:
                         print("appending order...")
@@ -609,14 +635,16 @@ class Storefront:
                 jump_height = product_details.get("jump_height")
                 spider_type = product_details.get("spider_type")
                 number_of_sound_effects = product_details.get("num_sound")
+                colour=product_details.get("colour")
+                has_glow=product_details.get("has_glow")
 
                 toys = holiday_factory.create_toys(name=itemName, description=description, product_id=productID,
                                                    has_batteries=battery_operated, min_age=recommended_age,
                                                    dimension=dimensions, num_rooms=num_rooms, speed=speed,
                                                    jump_height=jump_height, spider_type=spider_type,
-                                                   number_of_sound_effects=number_of_sound_effects)
-
-                if self.inventory.toyCount() > quantity:
+                                                   num_sound=number_of_sound_effects, colour=colour, has_glow=has_glow)
+                count = self.inventory.countItemsToys(toys)
+                if count > quantity:
                     print("sufficent!")
                     self.inventory.removeStuffedAnimal(toys, quantity)
                     try:
