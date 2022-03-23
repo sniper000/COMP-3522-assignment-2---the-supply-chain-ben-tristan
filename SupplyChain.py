@@ -615,7 +615,8 @@ class Storefront:
 
                 stuffedAnimals = holiday_factory.create_stuffed_animals(name=name, description=description,
                                                                         product_id=productID, colour=colour,
-                                                                        stuffing=stuffing, size=size, fabric=fabric)
+                                                                        stuffing=stuffing, size=size, fabric=fabric,
+                                                                        has_glow=has_glow)
 
                 count = self.inventory.countItemsAnimals(stuffedAnimals)
                 if count > quantity:
