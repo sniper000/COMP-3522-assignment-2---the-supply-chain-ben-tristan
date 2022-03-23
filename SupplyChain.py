@@ -157,6 +157,7 @@ class Candy(abc.ABC):
     abstract factory pattern is responsible to create.
     """
 
+    @abc.abstractmethod
     def __init__(self, name, description, product_id, has_nuts, has_lactose):
         self.name = name
         self.description = description
@@ -173,7 +174,7 @@ class PumpkinCaramelToffee(Candy):
     def __init__(self, name, description, product_id, has_nuts, has_lactose, variety):
         super().__init__(name, description, product_id, has_nuts, has_lactose)
         self.variety = variety
-        #(CandyFlavour.REGULAR, CandyFlavour.SEA_SALT)
+        # (CandyFlavour.REGULAR, CandyFlavour.SEA_SALT)
 
 
 class CandyCanes(Candy):
@@ -571,7 +572,7 @@ class Storefront:
             product = item.factoryMapping[1]
             productID = item.getProductID()
             quantity = item.getQuantity()
-            itemName = item.getItemName()
+            name = item.getItemName()
             description = item.getDescription()
             product_details = item.getProductDetails()
 
@@ -593,20 +594,14 @@ class Storefront:
                 pack_size = product_details.get("pack_size")
                 colour = product_details.get("colour")
                 # name, description, product_id, has_nuts, has_lactose, pack_size, colour, variety
-                candy = holiday_factory.create_candy(name=itemName, description=description, product_id=productID,
+                candy = holiday_factory.create_candy(name=name, description=description, product_id=productID,
                                                      has_nuts=has_nuts, has_lactose=has_lactose,
                                                      colour=colour, variety=variety, pack_size=pack_size)
 
                 count = self.inventory.countItemsCandy(candy)
                 if count > quantity:
                     self.inventory.removeCandy(candy, quantity)
-
-                    try:
-                        print("appending order...")
-                        self.appendOrder(item)
-                    except ValueError:
-                        print("nothing to append!")
-
+                    self.appendOrder(item)
                     print(f"successfully process: {item}")
                 else:
                     self.inventory.addCandy(candy, 100)
@@ -618,20 +613,15 @@ class Storefront:
                 size = product_details.get("size")
                 fabric = product_details.get("fabric")
 
-                stuffedAnimals = holiday_factory.create_stuffed_animals(name=itemName, description=description,
+                stuffedAnimals = holiday_factory.create_stuffed_animals(name=name, description=description,
                                                                         product_id=productID, colour=colour,
                                                                         stuffing=stuffing, size=size, fabric=fabric)
 
                 count = self.inventory.countItemsAnimals(stuffedAnimals)
                 if count > quantity:
                     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
-                    try:
-                        print("appending order...")
-                        self.appendOrder(item)
-                    except ValueError:
-                        print("nothing to append!")
-
-                    print(f"successfully process: {item}")
+                    self.appendOrder(item)
+                    print(f"successfully processed : {item}")
                 else:
                     self.inventory.addStuffedAnimals(stuffedAnimals, 100)
                     print(f"insufficient stock for: {item} ... restocking item!")
@@ -648,7 +638,7 @@ class Storefront:
                 colour=product_details.get("colour")
                 has_glow=product_details.get("has_glow")
 
-                toys = holiday_factory.create_toys(name=itemName, description=description, product_id=productID,
+                toys = holiday_factory.create_toys(name=name, description=description, product_id=productID,
                                                    has_batteries=battery_operated, min_age=recommended_age,
                                                    dimension=dimensions, num_rooms=num_rooms, speed=speed,
                                                    jump_height=jump_height, spider_type=spider_type,
@@ -656,12 +646,7 @@ class Storefront:
                 count = self.inventory.countItemsToys(toys)
                 if count > quantity:
                     self.inventory.removeStuffedAnimal(toys, quantity)
-                    try:
-                        print("appending order...")
-                        self.appendOrder(item)
-                    except ValueError:
-                        print("nothing to append!")
-
+                    self.appendOrder(item)
                     print(f"successfully process: {item}")
                 else:
                     self.inventory.addToys(toys, 100)
