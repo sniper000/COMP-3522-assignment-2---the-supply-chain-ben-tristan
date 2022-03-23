@@ -84,12 +84,13 @@ class RCSpider(Toys):
     RC (Remote Controlled) Spider is a Halloween-themed Toy
     """
 
-    def __init__(self, speed, jump_height, has_glow):
-        super().__init__(self.name, self.description, self.product_id, True, 12)
+    def __init__(self, name, description, product_id, battery_operated, recommended_age, speed, jump_height, has_glow,
+                 type_of_spider):
+        super().__init__(name, description, product_id, battery_operated, recommended_age)
         self.speed = speed
         self.jump_height = jump_height
         self.has_glow = has_glow
-        self.type_of_spider = (Spider.TARANTULA, Spider.WOLF_SPIDER)
+        self.type_of_spider = type_of_spider
 
 
 class RobotBunny(Toys):
@@ -226,13 +227,23 @@ class HalloweenFactory(HolidayFactory):
         :return: returns a RC Spider
         """
         for key, item in kwargs.items():
+            if key == "name":
+                name = item
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
             if key == "speed":
                 speed = item
             if key == "jump_height":
                 jump_height = item
             if key == "has_glow":
                 has_glow = item
-        return RCSpider(speed, jump_height, has_glow)
+            if key == "spider_type":
+                if item == Spider.WOLF_SPIDER or item == Spider.TARANTULA:
+                    spider_type = item
+        return RCSpider(name, description, product_id, speed, jump_height, has_glow,
+                 spider_type)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
