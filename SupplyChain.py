@@ -136,9 +136,9 @@ class Reindeer(StuffedAnimals):
     Reindeer is a Christmas-themed Stuffed Animal
     """
 
-    def __init__(self, has_glow_in_the_dark_nose):
-        super().__init__("Reindeer", "Reindeer Description", "5", "Wool", "S", "Cotton")
-        self.has_glow_in_the_dark_nose = has_glow_in_the_dark_nose
+    def __init__(self, name, description, product_id, stuffing, size, fabric, has_glow):
+        super().__init__(name, description, product_id, stuffing, size, fabric)
+        self.has_glow = has_glow
 
 
 class EasterBunny(StuffedAnimals):
@@ -311,9 +311,21 @@ class ChristmasFactory(HolidayFactory):
         :return: Returns a Reindeer
         """
         for key, item in kwargs.items():
+            if key == "name":
+                name = item
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
+            if key == "stuffing":
+                stuffing = item
+            if key == "size":
+                size = item
+            if key == "fabric":
+                fabric = item
             if key == "has_glow":
                 has_glow = item
-        return Reindeer()
+        return Reindeer(name, description, product_id, stuffing, size, fabric, has_glow)
 
     def create_candy(self, **kwargs) -> Candy:
         """
