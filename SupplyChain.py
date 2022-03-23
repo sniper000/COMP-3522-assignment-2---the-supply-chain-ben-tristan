@@ -495,7 +495,7 @@ class Inventory:
 
     def removeStuffedAnimal(self, item, quantity):
         for i in range(quantity):
-            self.toyInventory.remove(item)
+            self.stuffedAnimalInventory.remove(item)
 
     def removeCandy(self, item, quantity):
         for i in range(quantity):
@@ -507,13 +507,11 @@ class Inventory:
 
     def addStuffedAnimals(self, item, quantity):
         for i in range(quantity):
-            self.toyInventory.append(item)
+            self.stuffedAnimalInventory.append(item)
 
-    def addStuffedAnimal(self, item):
-        self.stuffedAnimalInventory.append(item)
-
-    def addCandy(self, item):
-        self.candyInventory.append(item)
+    def addCandy(self, item, quantity):
+        for i in range(quantity):
+            self.candyInventory.append(item)
 
     def toyCount(self):
         return int(len(self.toyInventory))
@@ -576,7 +574,6 @@ class Storefront:
             itemName = item.getItemName()
             description = item.getDescription()
             product_details = item.getProductDetails()
-            print(product)
 
             holiday_map = None
             if holiday == "HALLOWEEN":
@@ -589,19 +586,18 @@ class Storefront:
             holiday_factory = HolidayMapper().get_factory(holiday_map)
 
             if product == "Candy":
-                # set kwargs in create method
 
                 has_lactose = product_details.get("has_lactose")
                 has_nuts = product_details.get("has_nuts")
                 variety = product_details.get("variety")
                 pack_size = product_details.get("pack_size")
                 colour = product_details.get("colour")
-
+                # name, description, product_id, has_nuts, has_lactose, pack_size, colour, variety
                 candy = holiday_factory.create_candy(name=itemName, description=description, product_id=productID,
-                                                     contains_nuts=has_nuts, lactose_free=has_lactose,
+                                                     has_nuts=has_nuts, has_lactose=has_lactose,
                                                      colour=colour, variety=variety, pack_size=pack_size)
 
-                count = self.inventory.countItemsToys(toys)
+                count = self.inventory.countItemsCandy(candy)
                 if count > quantity:
                     self.inventory.removeCandy(candy, quantity)
 
@@ -626,7 +622,7 @@ class Storefront:
                                                                         product_id=productID, colour=colour,
                                                                         stuffing=stuffing, size=size, fabric=fabric)
 
-                count = self.inventory.countItemsToys(toys)
+                count = self.inventory.countItemsAnimals(stuffedAnimals)
                 if count > quantity:
                     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
                     try:
@@ -659,7 +655,6 @@ class Storefront:
                                                    num_sound=number_of_sound_effects, colour=colour, has_glow=has_glow)
                 count = self.inventory.countItemsToys(toys)
                 if count > quantity:
-                    print("sufficent!")
                     self.inventory.removeStuffedAnimal(toys, quantity)
                     try:
                         print("appending order...")
