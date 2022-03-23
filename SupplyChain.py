@@ -98,10 +98,10 @@ class RobotBunny(Toys):
     Robot Bunny is an Easter-themed Toy
     """
 
-    def __init__(self, name, description, product_id, has_batteries, recommended_age, number_of_sound_effects, colour
+    def __init__(self, name, description, product_id, has_batteries, recommended_age, num_sound, colour
                  ):
         super().__init__(name, description, product_id, has_batteries, recommended_age)
-        self.number_of_sound_effects = number_of_sound_effects
+        self.num_sound = num_sound
         self.colour = colour
 
 
@@ -342,13 +342,12 @@ class EasterFactory(HolidayFactory):
                 battery_operated = item
             if key == "recommended_age":
                 recommended_age = item
-            if key == "number_of_sound_effects":
-                number_of_sound_effects = item
+            if key == "num_sound":
+                num_sound = item
             if key == "colour":
                 if item == Colour.ORANGE or item == Colour.BLUE or item == Colour.PINK:
                     colour = item
-                number_of_sound_effects = item
-        return RobotBunny(name, description, product_id, battery_operated, recommended_age, number_of_sound_effects,
+        return RobotBunny(name, description, product_id, battery_operated, recommended_age, num_sound,
                           colour)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
