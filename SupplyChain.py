@@ -491,18 +491,22 @@ class Inventory:
         return i
 
     def removeToy(self, item, quantity):
-        for i in range(quantity):
-            for toy in self.toyInventory:
-                if item.name == toy.name:
-                    self.toyInventory.remove(toy)
-                break
+        i = int(quantity)
+        for toy in self.toyInventory:
+            if i == 0:
+                return
+            if item.name == toy.name:
+                i -= 1
+                self.toyInventory.remove(toy)
 
     def removeStuffedAnimal(self, item, quantity):
-        for i in range(quantity):
-            for animals in self.stuffedAnimalInventory:
-                if item.name == animals.name:
-                    self.stuffedAnimalInventory.remove(animals)
-                break
+        i = int(quantity)
+        for stuffedAnimals in self.stuffedAnimalInventory:
+            if i == 0:
+                return
+            if item.name == stuffedAnimals.name:
+                i -= 1
+                self.stuffedAnimalInventory.remove(stuffedAnimals)
 
     def removeCandy(self, item, quantity):
         i = int(quantity)
@@ -534,6 +538,27 @@ class Inventory:
     def candyCount(self):
         return int(len(self.candyInventory))
 
+    def checkInventory(self, product_id):
+        count = 0
+        for item in self.toyInventory:
+            if item.product_id == product_id:
+                count += 1
+        for item in self.candyInventory:
+            if item.product_id == product_id:
+                count += 1
+        for item in self.stuffedAnimalInventory:
+            if item.product_id == product_id:
+                count += 1
+        print(f"your search returned {count} result")
+        if count > 10:
+            print("item is in stock")
+        if 10 > count > 3:
+            print("item is low in stock")
+        if 3 > count > 0:
+            print("item is very low in stock")
+        if count == 0:
+            print("item is out stock")
+
     def print(self):
         print("Printing inventory: ")
         [print(item.name) for item in self.toyInventory]
@@ -563,7 +588,6 @@ class Storefront:
                 if userInput == '0':
                     self.createOrder()
                 if userInput == '1':
-                    self.inventory.print()
                     self.checkInventories()
                 if userInput == '2':
                     print("writing daily transactions...")
@@ -662,7 +686,7 @@ class Storefront:
 
                 if count > int(quantity):
                     print("processing order...")
-                    self.inventory.removeStuffedAnimal(toys, quantity)
+                    self.inventory.removeToy(toys, quantity)
                     print(f"successfully processed: {item}")
                 else:
                     self.inventory.addToys(toys, 100)
@@ -674,32 +698,8 @@ class Storefront:
         self.orders.append(order)
 
     def checkInventories(self):
-        if self.inventory.candyCount() > 10:
-            print("Candy is in stock")
-        if 10 > self.inventory.candyCount() > 3:
-            print("Candy is low in stock")
-        if 3 >= self.inventory.candyCount() > 0:
-            print("Candy is very low in stock")
-        if self.inventory.candyCount() == 0:
-            print("Candy is out of stock")
-
-        if self.inventory.toyCount() > 10:
-            print("Toys are in stock")
-        if 10 > self.inventory.toyCount() > 3:
-            print("Toys are low in stock")
-        if 3 >= self.inventory.toyCount() > 0:
-            print("Toys are very low in stock")
-        if self.inventory.toyCount() == 0:
-            print("Toys are out of stock")
-
-        if self.inventory.stuffedAnimalCount() > 10:
-            print("Stuffed Animals are in stock")
-        if 10 > self.inventory.stuffedAnimalCount() > 3:
-            print("Stuffed Animals are low in stock")
-        if 3 >= self.inventory.stuffedAnimalCount() > 0:
-            print("Stuffed Animals are very low in stock")
-        if self.inventory.stuffedAnimalCount() == 0:
-            print("Stuffed Animals are out of stock")
+        user_input = input("enter product_id")
+        self.inventory.checkInventory(user_input)
 
     def printDailyTransactions(self):
         date_time = date.today().strftime("%b-%d-%Y")
