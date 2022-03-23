@@ -170,9 +170,10 @@ class PumpkinCaramelToffee(Candy):
     CremeEggs is a Halloween-themed Candy
     """
 
-    def __init__(self):
-        super().__init__("Pumpkin Caramel Toffee", "Pumpkin Caramel Toffee Description", "1", True, False)
-        self.candy_flavour = (CandyFlavour.REGULAR, CandyFlavour.SEA_SALT)
+    def __init__(self, name, description, product_id, has_nuts, has_lactose, variety):
+        super().__init__(name, description, product_id, has_nuts, has_lactose)
+        self.variety = variety
+        #(CandyFlavour.REGULAR, CandyFlavour.SEA_SALT)
 
 
 class CandyCanes(Candy):
@@ -180,9 +181,9 @@ class CandyCanes(Candy):
     CremeEggs is a Christmas-themed Candy
     """
 
-    def __init__(self, name, description, product_id, has_nuts, has_lactose, candy_stripes):
+    def __init__(self, name, description, product_id, has_nuts, has_lactose, colour):
         super().__init__(name, description, product_id, has_nuts, has_lactose)
-        self.candy_stripes = candy_stripes
+        self.colour = colour
 
 
 class CremeEggs(Candy):
@@ -275,7 +276,20 @@ class HalloweenFactory(HolidayFactory):
         """
         :return: Returns a Pumpkin Caramel Toffee
         """
-        return PumpkinCaramelToffee()
+        for key, item in kwargs.items():
+            if key == "name":
+                name = item
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
+            if key == "has_nuts":
+                has_nuts = item
+            if key == "has_lactose":
+                has_lactose = item
+            if key == "variety":
+                variety = item
+        return PumpkinCaramelToffee(name, description, product_id, has_nuts, has_lactose, variety)
 
 
 class ChristmasFactory(HolidayFactory):
@@ -342,10 +356,10 @@ class ChristmasFactory(HolidayFactory):
                 has_nuts = item
             if key == "has_lactose":
                 has_lactose = item
-            if key == "candy_stripes":
-                if item == Colour.RED or item == Colour.GREEN:
-                    candy_stripes = item
-        return CandyCanes(name, description, product_id, has_nuts, has_lactose, candy_stripes)
+            if key == "colour":
+                colour = item
+                # if item == Colour.RED or item == Colour.GREEN:
+        return CandyCanes(name, description, product_id, has_nuts, has_lactose, colour)
 
 
 class EasterFactory(HolidayFactory):
