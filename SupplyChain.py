@@ -601,7 +601,6 @@ class Storefront:
                 count = self.inventory.countItemsCandy(candy)
                 if count > quantity:
                     self.inventory.removeCandy(candy, quantity)
-                    self.appendOrder(item)
                     print(f"successfully process: {item}")
                 else:
                     self.inventory.addCandy(candy, 100)
@@ -621,7 +620,6 @@ class Storefront:
                 count = self.inventory.countItemsAnimals(stuffedAnimals)
                 if count > quantity:
                     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
-                    self.appendOrder(item)
                     print(f"successfully processed : {item}")
                 else:
                     self.inventory.addStuffedAnimals(stuffedAnimals, 100)
@@ -647,11 +645,12 @@ class Storefront:
                 count = self.inventory.countItemsToys(toys)
                 if count > quantity:
                     self.inventory.removeStuffedAnimal(toys, quantity)
-                    self.appendOrder(item)
                     print(f"successfully process: {item}")
                 else:
                     self.inventory.addToys(toys, 100)
                     print(f"insufficient stock for: {item} ... restocking item!")
+            print("writing...")
+            self.appendOrder(item)
 
     def appendOrder(self, order):
         self.orders.append(order)
