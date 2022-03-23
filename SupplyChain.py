@@ -248,7 +248,7 @@ class HalloweenFactory(HolidayFactory):
                 if item == Spider.WOLF_SPIDER or item == Spider.TARANTULA:
                     spider_type = item
         return RCSpider(name, description, product_id, has_batteries, recommended_age, speed, jump_height, has_glow,
-                 spider_type)
+                        spider_type)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
@@ -496,8 +496,6 @@ class Storefront:
             itemName = item.getItemName()
             description = item.getDescription()
             product_details = item.getProductDetails()
-            print(product)
-
 
             holiday_map = None
             if holiday == "HALLOWEEN":
@@ -517,29 +515,42 @@ class Storefront:
                 variety = product_details.get("variety")
                 pack_size = product_details.get("pack_size")
                 colour = product_details.get("colour")
-                details = {"name": itemName,
-                           "description": description,
-                           "product_id": productID,
-                           "contains_nuts": has_nuts,
-                           "lactose_free": has_lactose
-                           }
 
-                candy = holiday_factory.create_candy(name=itemName, description=description, product_id = productID,
-                                                     contains_nuts=has_nuts, lactose_free= has_lactose,
-                                                     candy_stripes=colour, variety = variety, pack_size=pack_size)
+                candy = holiday_factory.create_candy(name=itemName, description=description, product_id=productID,
+                                                     contains_nuts=has_nuts, lactose_free=has_lactose,
+                                                     candy_stripes=colour, variety=variety, pack_size=pack_size)
 
                 if self.inventory.candyCount() > quantity:
                     self.inventory.removeCandy(candy, quantity)
-                    self.appendOrder(item)
+
+                    try:
+                        print("appending order...")
+                        self.appendOrder(item)
+                    except ValueError:
+                        print("nothing to append!")
+
                     print(f"successfully process: {item}")
                 else:
                     self.inventory.addCandy(candy, 100)
                     print(f"insufficient stock for: {item} ... restocking item!")
 
             if product == "StuffedAnimal":
-                stuffedAnimals = holiday_factory.create_stuffed_animals()
+                colour = product_details.get("colour")
+                stuffing = product_details.get("stuffing")
+                size = product_details.get("size")
+                fabric = product_details.get("fabric")
+
+                stuffedAnimals = holiday_factory.create_stuffed_animals(name=itemName, description=description,
+                                                                        product_id=productID, colour=colour,
+                                                                        stuffing=stuffing, size=size, fabric=fabric)
                 if self.inventory.stuffedAnimalCount() > quantity:
                     self.inventory.removeStuffedAnimal(stuffedAnimals, quantity)
+                    try:
+                        print("appending order...")
+                        self.appendOrder(item)
+                    except ValueError:
+                        print("nothing to append!")
+
                     print(f"successfully process: {item}")
                 else:
                     self.inventory.addStuffedAnimals(stuffedAnimals, 100)
@@ -556,14 +567,19 @@ class Storefront:
                 number_of_sound_effects = product_details.get("num_sound")
 
                 toys = holiday_factory.create_toys(name=itemName, description=description, product_id=productID,
-                                                   battery_operated=battery_operated, recommended_age=recommended_age,
+                                                   has_batteries=battery_operated, recommended_age=recommended_age,
                                                    dimension=dimensions, num_rooms=num_rooms, speed=speed,
                                                    jump_height=jump_height, spider_type=spider_type,
                                                    number_of_sound_effects=number_of_sound_effects)
 
                 if self.inventory.toyCount() > quantity:
                     self.inventory.removeStuffedAnimal(toys, quantity)
-                    self.appendOrder(item)
+                    try:
+                        print("appending order...")
+                        self.appendOrder(item)
+                    except ValueError:
+                        print("nothing to append!")
+
                     print(f"successfully process: {item}")
                 else:
                     self.inventory.addToys(toys, 100)
@@ -694,8 +710,6 @@ class OrderProcessor:
             order_list.append(Order(factoryMapping, order_number,
                                     product_id, name, quantity, description, product_details))
 
-        print("Processing complete!")
-        print("returning to main menu: ")
         return order_list
 
 
