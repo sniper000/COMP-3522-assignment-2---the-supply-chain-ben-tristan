@@ -60,12 +60,12 @@ class Toys(abc.ABC):
     """
 
     @abc.abstractmethod
-    def __init__(self, name, description, product_id, has_batteries, recommended_age):
+    def __init__(self, name, description, product_id, has_batteries, min_age):
         self.name = name
         self.description = description
         self.product_id = product_id
         self.has_batteries = has_batteries
-        self.recommended_age = recommended_age
+        self.min_age = min_age
 
 
 class SantaSWorkshop(Toys):
@@ -73,8 +73,8 @@ class SantaSWorkshop(Toys):
     Santa's Workshop is a Christmas-themed Toy
     """
 
-    def __init__(self, name, description, product_id, has_batteries, recommended_age, dimensions, num_rooms):
-        super().__init__(name, description, product_id, has_batteries, recommended_age)
+    def __init__(self, name, description, product_id, has_batteries, min_age, dimensions, num_rooms):
+        super().__init__(name, description, product_id, has_batteries, min_age)
         self.dimensions = dimensions
         self.num_rooms = num_rooms
 
@@ -84,9 +84,9 @@ class RCSpider(Toys):
     RC (Remote Controlled) Spider is a Halloween-themed Toy
     """
 
-    def __init__(self, name, description, product_id, has_batteries, recommended_age, speed, jump_height, has_glow,
+    def __init__(self, name, description, product_id, has_batteries, min_age, speed, jump_height, has_glow,
                  spider_type):
-        super().__init__(name, description, product_id, has_batteries, recommended_age)
+        super().__init__(name, description, product_id, has_batteries, min_age)
         self.speed = speed
         self.jump_height = jump_height
         self.has_glow = has_glow
@@ -98,9 +98,9 @@ class RobotBunny(Toys):
     Robot Bunny is an Easter-themed Toy
     """
 
-    def __init__(self, name, description, product_id, has_batteries, recommended_age, num_sound, colour
+    def __init__(self, name, description, product_id, has_batteries, min_age, num_sound, colour
                  ):
-        super().__init__(name, description, product_id, has_batteries, recommended_age)
+        super().__init__(name, description, product_id, has_batteries, min_age)
         self.num_sound = num_sound
         self.colour = colour
 
@@ -126,8 +126,8 @@ class DancingSkeleton(StuffedAnimals):
     Dancing Skeleton is a Halloween-themed Stuffed Animal
     """
 
-    def __init__(self, has_glow):
-        super().__init__("Dancing Skeleton", "Dancing Skeleton Description", "4", "Polyester Fibrefill", "S", "Acrylic")
+    def __init__(self, name, description, product_id, stuffing, size, fabric, has_glow):
+        super().__init__(name, description, product_id, stuffing, size, fabric)
         self.has_glow = has_glow
 
 
@@ -146,9 +146,9 @@ class EasterBunny(StuffedAnimals):
     Easter Bunny is an Easter-themed Stuffed Animal
     """
 
-    def __init__(self):
-        super().__init__("Easter Bunny", "Easter Bunny Description", "6", "Polyester Fibrefill", "S", "Linen")
-        self.colour = (Colour.WHITE, Colour.GREY, Colour.PINK, Colour.BLUE)
+    def __init__(self, name, description, product_id, stuffing, size, fabric, colour):
+        super().__init__(name, description, product_id, stuffing, size, fabric)
+        self.colour = colour
 
 
 class Candy(abc.ABC):
@@ -157,12 +157,12 @@ class Candy(abc.ABC):
     abstract factory pattern is responsible to create.
     """
 
-    def __init__(self, name, description, product_id, contain_nuts, lactose_free):
+    def __init__(self, name, description, product_id, has_nuts, has_lactose):
         self.name = name
         self.description = description
         self.product_id = product_id
-        self.contain_nuts = contain_nuts
-        self.lactose_free = lactose_free
+        self.has_nuts = has_nuts
+        self.has_lactose = has_lactose
 
 
 class PumpkinCaramelToffee(Candy):
@@ -180,8 +180,8 @@ class CandyCanes(Candy):
     CremeEggs is a Christmas-themed Candy
     """
 
-    def __init__(self, name, description, product_id, contain_nuts, lactose_free, candy_stripes):
-        super().__init__("Candy Canes", "Candy Canes Candy Description", "2", False, True)
+    def __init__(self, name, description, product_id, has_nuts, has_lactose, candy_stripes):
+        super().__init__(name, description, product_id, has_nuts, has_lactose)
         self.candy_stripes = candy_stripes
 
 
@@ -190,8 +190,8 @@ class CremeEggs(Candy):
     CremeEggs is an Easter-themed Candy
     """
 
-    def __init__(self, pack_size):
-        super().__init__("Creme Eggs", "Creme Eggs Candy", "3", True, False)
+    def __init__(self, name, description, product_id, has_nuts, has_lactose, pack_size):
+        super().__init__(name, description, product_id, has_nuts, has_lactose)
         self.pack_size = pack_size
 
 
@@ -234,10 +234,10 @@ class HalloweenFactory(HolidayFactory):
                 description = item
             if key == "product_id":
                 product_id = item
-            if key == "product_id":
+            if key == "has_batteries":
                 has_batteries = item
-            if key == "product_id":
-                recommended_age = item
+            if key == "min_age":
+                min_age = item
             if key == "speed":
                 speed = item
             if key == "jump_height":
@@ -247,17 +247,29 @@ class HalloweenFactory(HolidayFactory):
             if key == "spider_type":
                 if item == Spider.WOLF_SPIDER or item == Spider.TARANTULA:
                     spider_type = item
-        return RCSpider(name, description, product_id, has_batteries, recommended_age, speed, jump_height, has_glow,
-                        spider_type)
+        return RCSpider(name, description, product_id, has_batteries, min_age, speed, jump_height, has_glow,
+                 spider_type)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
         :return: Returns a Dancing Skeleton
         """
         for key, item in kwargs.items():
+            if key == "name":
+                name = item
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
+            if key == "stuffing":
+                stuffing = item
+            if key == "size":
+                size = item
+            if key == "fabric":
+                fabric = item
             if key == "has_glow":
                 has_glow = item
-        return DancingSkeleton(has_glow)
+        return DancingSkeleton(name, description, product_id, stuffing, size, fabric, has_glow)
 
     def create_candy(self, **kwargs) -> Candy:
         """
@@ -286,13 +298,13 @@ class ChristmasFactory(HolidayFactory):
                 product_id = item
             if key == "has_batteries":
                 has_batteries = item
-            if key == "recommended_age":
-                recommended_age = item
+            if key == "min_age":
+                min_age = item
             if key == "dimension":
                 dimension = item
             if key == "num_rooms":
                 num_rooms = item
-        return SantaSWorkshop(name, description, product_id, has_batteries, recommended_age, dimension, num_rooms)
+        return SantaSWorkshop(name, description, product_id, has_batteries, min_age, dimension, num_rooms)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
@@ -305,7 +317,7 @@ class ChristmasFactory(HolidayFactory):
 
     def create_candy(self, **kwargs) -> Candy:
         """
-        :return: Returns a Pumpkin Caramel Toffee
+        :return: Returns a Candy Canes
         """
         for key, item in kwargs.items():
             if key == "name":
@@ -314,14 +326,14 @@ class ChristmasFactory(HolidayFactory):
                 description = item
             if key == "product_id":
                 product_id = item
-            if key == "contains_nuts":
-                contain_nuts = item
-            if key == "lactose_free":
-                lactose_free = item
+            if key == "has_nuts":
+                has_nuts = item
+            if key == "has_lactose":
+                has_lactose = item
             if key == "candy_stripes":
                 if item == Colour.RED or item == Colour.GREEN:
                     candy_stripes = item
-        return CandyCanes(name, description, product_id, contain_nuts, lactose_free, candy_stripes)
+        return CandyCanes(name, description, product_id, has_nuts, has_lactose, candy_stripes)
 
 
 class EasterFactory(HolidayFactory):
@@ -344,14 +356,15 @@ class EasterFactory(HolidayFactory):
                 product_id = item
             if key == "has_batteries":
                 has_batteries = item
-            if key == "recommended_age":
-                recommended_age = item
+            if key == "min_age":
+                min_age = item
             if key == "num_sound":
                 num_sound = item
             if key == "colour":
-                if item == Colour.ORANGE or item == Colour.BLUE or item == Colour.PINK:
-                    colour = item
-        return RobotBunny(name, description, product_id, has_batteries, recommended_age, num_sound,
+                colour = item
+                # if item == Colour.ORANGE or item == Colour.BLUE or item == Colour.PINK:
+                #     colour = item
+        return RobotBunny(name, description, product_id, has_batteries, min_age, num_sound,
                           colour)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
@@ -361,7 +374,20 @@ class EasterFactory(HolidayFactory):
         for key, item in kwargs.items():
             if key == "name":
                 name = item
-        return EasterBunny(name)
+            if key == "description":
+                description = item
+            if key == "product_id":
+                product_id = item
+            if key == "stuffing":
+                stuffing = item
+            if key == "size":
+                size = item
+            if key == "fabric":
+                fabric = item
+            if key == "colour":
+                colour = item
+            # (Colour.WHITE, Colour.GREY, Colour.PINK, Colour.BLUE)
+        return EasterBunny(name, description, product_id, stuffing, size, fabric, colour)
 
     def create_candy(self, *kwargs) -> Candy:
         """
@@ -374,9 +400,13 @@ class EasterFactory(HolidayFactory):
                 description = item
             if key == "product_id":
                 product_id = item
+            if key == "has_nuts":
+                has_nuts = item
+            if key == "has_lactose":
+                has_lactose = item
             if key == "pack_size":
                 pack_size = item
-        return CremeEggs(name, description, product_id, pack_size)
+        return CremeEggs(name, description, product_id, has_nuts, has_lactose, pack_size)
 
 
 class HolidayMapper:
@@ -496,6 +526,8 @@ class Storefront:
             itemName = item.getItemName()
             description = item.getDescription()
             product_details = item.getProductDetails()
+            print(product)
+
 
             holiday_map = None
             if holiday == "HALLOWEEN":
