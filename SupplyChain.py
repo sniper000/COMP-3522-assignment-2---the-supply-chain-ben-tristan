@@ -18,39 +18,31 @@ class Holiday(enum.Enum):
     EASTER = "EASTER"
 
 
-class Spider(enum.Enum):
-    """
-    This enum specifies the different distinct spider types.
-    """
-    TARANTULA = 0,
-    WOLF_SPIDER = 1
-
-
 class CandyFlavour(enum.Enum):
     """
     This enum specifies the different distinct Candy Flavour types.
     """
-    SEA_SALT = 0,
-    REGULAR = 1
+    SEA_SALT = "sea salt",
+    REGULAR = "regular"
 
 
 class Colour(enum.Enum):
     """
     This enum specifies the different distinct colour types.
     """
-    ORANGE = 0,
-    BLUE = 1,
-    PINK = 2,
-    WHITE = 3,
-    GREY = 4,
-    RED = 5,
-    GREEN = 6
+    ORANGE = "orange",
+    BLUE = "blue",
+    PINK = "pink",
+    WHITE = "white",
+    GREY = "grey",
+    RED = "red",
+    GREEN = "green"
 
 
 class Product(enum.Enum):
-    TOY = 0,
-    STUFFED_ANIMAL = 1,
-    CANDY = 2
+    TOY = "Toy",
+    STUFFED_ANIMAL = "StuffedAnimal",
+    CANDY = "Candy"
 
 
 class Toys(abc.ABC):
@@ -174,7 +166,6 @@ class PumpkinCaramelToffee(Candy):
     def __init__(self, name, description, product_id, has_nuts, has_lactose, variety):
         super().__init__(name, description, product_id, has_nuts, has_lactose)
         self.variety = variety
-        # (CandyFlavour.REGULAR, CandyFlavour.SEA_SALT)
 
 
 class CandyCanes(Candy):
@@ -201,8 +192,7 @@ class HolidayFactory(abc.ABC):
     """
     The base factory class. All worlds expect this factory class to
     populate the world. The CharacterFactory class defines an interface
-    to create the a Product family consisting of Friendlies, Enemies,
-    and Animals. These vary by world.
+    to create the a Product family consisting of Toys, Stuffed Animals or Candy. These vary by Holiday.
     """
 
     @abc.abstractmethod
@@ -229,6 +219,7 @@ class HalloweenFactory(HolidayFactory):
         """
         :return: returns a RC Spider
         """
+        spider_type = ""
         for key, item in kwargs.items():
             if key == "name":
                 name = item
@@ -248,7 +239,6 @@ class HalloweenFactory(HolidayFactory):
                 has_glow = item
             if key == "spider_type":
                 spider_type = item
-                # if item == Spider.WOLF_SPIDER or item == Spider.TARANTULA:
         return RCSpider(name, description, product_id, has_batteries, min_age, speed, jump_height, has_glow,
                         spider_type)
 
@@ -289,15 +279,16 @@ class HalloweenFactory(HolidayFactory):
             if key == "has_lactose":
                 has_lactose = item
             if key == "variety":
-                variety = item
+                if item.lower() == CandyFlavour.REGULAR.name.lower() or item.lower() == CandyFlavour.SEA_SALT.name.lower():
+                    variety = item
         return PumpkinCaramelToffee(name, description, product_id, has_nuts, has_lactose, variety)
 
 
 class ChristmasFactory(HolidayFactory):
     """
-    This factory class implements the CharacterFactory Interface. It
-    returns a product family consisting of RC Spider, Stuffed Animals, and
-    Pumpkin Caramel Toffee.
+    This factory class implements the HolidayFactory Interface. It
+    returns a product family consisting of Santa's Workshop, Reindeer, and
+    Candy Cane.
     """
 
     def create_toys(self, **kwargs) -> Toys:
@@ -358,16 +349,16 @@ class ChristmasFactory(HolidayFactory):
             if key == "has_lactose":
                 has_lactose = item
             if key == "colour":
-                colour = item
-                # if item == Colour.RED or item == Colour.GREEN:
+                if item.lower() == Colour.RED.name.lower() or item.lower() == Colour.GREEN.name.lower():
+                    colour = item
         return CandyCanes(name, description, product_id, has_nuts, has_lactose, colour)
 
 
 class EasterFactory(HolidayFactory):
     """
-    This factory class implements the CharacterFactory Interface. It
-    returns a product family consisting of RC Spider, Stuffed Animals, and
-    Pumpkin Caramel Toffee.
+    This factory class implements the HolidayFactory Interface. It
+    returns a product family consisting of Robot Bunny, Easter Bunny, and
+    Creme Eggs.
     """
 
     def create_toys(self, **kwargs) -> Toys:
@@ -389,14 +380,15 @@ class EasterFactory(HolidayFactory):
                 num_sound = item
             if key == "colour":
                 colour = item
-                # if item == Colour.ORANGE or item == Colour.BLUE or item == Colour.PINK:
-                #     colour = item
+                if item.lower() == Colour.ORANGE.name.lower() or item.lower() == Colour.BLUE.name.lower() or \
+                        item.lower() == Colour.PINK.name.lower():
+                    colour = item
         return RobotBunny(name, description, product_id, has_batteries, min_age, num_sound,
                           colour)
 
     def create_stuffed_animals(self, **kwargs) -> StuffedAnimals:
         """
-        :return: Returns a Easter Bunny
+        :return: Returns an Easter Bunny
         """
         for key, item in kwargs.items():
             if key == "name":
@@ -412,8 +404,9 @@ class EasterFactory(HolidayFactory):
             if key == "fabric":
                 fabric = item
             if key == "colour":
-                colour = item
-            # (Colour.WHITE, Colour.GREY, Colour.PINK, Colour.BLUE)
+                if item.lower() == Colour.WHITE.name.lower() or item.lower() == Colour.GREY.name.lower() or \
+                        item.lower() == Colour.PINK.name.lower() or item.lower() == Colour.BLUE.name.lower():
+                    colour = item
         return EasterBunny(name, description, product_id, stuffing, size, fabric, colour)
 
     def create_candy(self, **kwargs) -> Candy:
@@ -692,8 +685,7 @@ class Storefront:
 
             holiday_factory = HolidayMapper().get_factory(holiday_map)
 
-            if product == "Candy":
-
+            if product == Product.CANDY.value:
                 has_lactose = product_details.get("has_lactose")
                 has_nuts = product_details.get("has_nuts")
                 variety = product_details.get("variety")
