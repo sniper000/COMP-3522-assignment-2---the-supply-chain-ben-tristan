@@ -462,11 +462,22 @@ class Inventory:
     """
 
     def __init__(self, toyInventory, stuffedAnimalInventory, candyInventory):
+        """
+        initializer for the inventory class.
+        :param toyInventory: a list of Toys
+        :param stuffedAnimalInventory: a list of StuffedAnimals
+        :param candyInventory: a list of Candy
+        """
         self.toyInventory = toyInventory
         self.stuffedAnimalInventory = stuffedAnimalInventory
         self.candyInventory = candyInventory
 
     def countItemsToys(self, name):
+        """
+        counts toys in toy inventory
+        :param name: a String
+        :return: an int
+        """
         i = 0
 
         for toy in self.toyInventory:
@@ -475,6 +486,11 @@ class Inventory:
         return i
 
     def countItemsAnimals(self, name):
+        """
+        counts animals in stuffed animals inventory
+        :param name: a String
+        :return: an int
+        """
         i = 0
 
         for animal in self.stuffedAnimalInventory:
@@ -483,6 +499,11 @@ class Inventory:
         return i
 
     def countItemsCandy(self, name):
+        """
+        counts candy in candy inventory
+        :param name: a String
+        :return: an int
+        """
         i = 0
 
         for candy in self.candyInventory:
@@ -491,6 +512,12 @@ class Inventory:
         return i
 
     def removeToy(self, item, quantity):
+        """
+        removes toys from toy inventory
+        :param item: Toy
+        :param quantity: an int
+        :return: None
+        """
         i = int(quantity)
         for toy in self.toyInventory:
             if i == 0:
@@ -500,6 +527,12 @@ class Inventory:
                 self.toyInventory.remove(toy)
 
     def removeStuffedAnimal(self, item, quantity):
+        """
+        removes stuffed animals from stuffed animals inventory
+        :param item: StuffedAnimal
+        :param quantity: an int
+        :return: None
+        """
         i = int(quantity)
         for stuffedAnimals in self.stuffedAnimalInventory:
             if i == 0:
@@ -509,6 +542,12 @@ class Inventory:
                 self.stuffedAnimalInventory.remove(stuffedAnimals)
 
     def removeCandy(self, item, quantity):
+        """
+        removes candy from candy inventory
+        :param item: Candy
+        :param quantity: an int
+        :return: None
+        """
         i = int(quantity)
         for candy in self.candyInventory:
             if i == 0:
@@ -518,27 +557,41 @@ class Inventory:
                 self.candyInventory.remove(candy)
 
     def addToys(self, item, quantity):
+        """
+        adds toys to toys inventory.
+        :param item: Toys
+        :param quantity: an int
+        :return: None
+        """
         for i in range(quantity):
             self.toyInventory.append(item)
 
     def addStuffedAnimals(self, item, quantity):
+        """
+        adds stuffed animals to stuffed animals inventory.
+        :param item: StuffedAnimal
+        :param quantity: an int
+        :return: None
+        """
         for i in range(quantity):
             self.stuffedAnimalInventory.append(item)
 
     def addCandy(self, item, quantity):
+        """
+        adds candy to candy inventory.
+        :param item: Candy
+        :param quantity: an int
+        :return: None
+        """
         for i in range(quantity):
             self.candyInventory.append(item)
 
-    def toyCount(self):
-        return int(len(self.toyInventory))
-
-    def stuffedAnimalCount(self):
-        return int(len(self.stuffedAnimalInventory))
-
-    def candyCount(self):
-        return int(len(self.candyInventory))
-
     def checkInventory(self, product_id):
+        """
+        allows users to search for items in their inventory by inventory id.
+        :param product_id: a String
+        :return: None
+        """
         count = 0
         for item in self.toyInventory:
             if item.product_id == product_id:
@@ -560,6 +613,10 @@ class Inventory:
             print("item is out stock")
 
     def print(self):
+        """
+        Displays all objects in inventories -> for debug
+        :return: None
+        """
         print("Printing inventory: ")
         [print(item.name) for item in self.toyInventory]
         [print(item.name) for item in self.stuffedAnimalInventory]
@@ -572,10 +629,19 @@ class Storefront:
     """
 
     def __init__(self, orders, inventory):
+        """
+        initializer for Storefront.
+        :param orders: list of Orders
+        :param inventory: Inventory
+        """
         self.orders = orders
         self.inventory = inventory
 
     def userMenu(self):
+        """
+        User menu -> application entry point.
+        :return: None
+        """
         print("welcome to the Web Store!")
         print("_________________________")
         try:
@@ -599,6 +665,10 @@ class Storefront:
             print("invalid input")
 
     def createOrder(self):
+        """
+        processes online orders from specified orders file.
+        :return: None
+        """
         print(f"Creating a new order: \n")
         print("_________________________")
         op = OrderProcessor()
@@ -695,13 +765,26 @@ class Storefront:
             self.appendOrder(item)
 
     def appendOrder(self, order):
+        """
+        appends order to the user order list
+        :param order: an Order
+        :return: None
+        """
         self.orders.append(order)
 
     def checkInventories(self):
+        """
+        calls checkInventories in the inventory class.
+        :return: None
+        """
         user_input = input("enter product_id")
         self.inventory.checkInventory(user_input)
 
     def printDailyTransactions(self):
+        """
+        Writes all order transactions to a txt file on program exit.
+        :return: None
+        """
         date_time = date.today().strftime("%b-%d-%Y")
         with open('dailyTransactions.txt', 'w') as f:
             f.write("WEB STORE - Daily Transaction Report \n")
@@ -716,6 +799,16 @@ class Order:
     """
 
     def __init__(self, factoryMapping, orderNumber, productId, itemName, quantity, description, productDetails):
+        """
+        initializer for the Order object.
+        :param factoryMapping: a tuple -> to be mapped
+        :param orderNumber: an int
+        :param productId: a String
+        :param itemName: a String
+        :param quantity: an int
+        :param description: a String
+        :param productDetails: a Dictionary
+        """
         self.factoryMapping = factoryMapping
         self.orderNumber = orderNumber
         self.productId = productId
@@ -725,28 +818,60 @@ class Order:
         self.productDetails = productDetails
 
     def __str__(self):
+        """
+        String representation for the Order object.
+        :return: formatted String
+        """
         return (f"Order {self.orderNumber}, Item {self.factoryMapping[1]}, Product Id {self.productId},"
                 f"Name {self.itemName}, Quantity {self.quantity} \n")
 
     def get_factoryMapping(self):
+        """
+        holds item and holiday objects to be mapped in the future.
+        :return: tuple
+        """
         return self.factoryMapping
 
     def getOrderNumber(self):
+        """
+        getter for order number.
+        :return: an int
+        """
         return self.orderNumber
 
     def getProductID(self):
+        """
+        getter for product identification.
+        :return: a String
+        """
         return self.productId
 
     def getItemName(self):
+        """
+        getter for item name.
+        :return: a String
+        """
         return self.itemName
 
     def getQuantity(self):
+        """
+        getter for quantity.
+        :return: an int
+        """
         return self.quantity
 
     def getDescription(self):
+        """
+        getter for product description.
+        :return: a string
+        """
         return self.description
 
     def getProductDetails(self):
+        """
+        getter for product details.
+        :return: dict of product details.
+        """
         return self.productDetails
 
 
@@ -759,6 +884,10 @@ class OrderProcessor:
         pass
 
     def processOrder(self):
+        """
+        Function that accesses orders from user inputted file using pandas.
+        :return: list of orders
+        """
         filename = input("enter filename: \n")
         df_sheet_all = pd.read_excel(filename, sheet_name="Sheet1")
         order_list = []
