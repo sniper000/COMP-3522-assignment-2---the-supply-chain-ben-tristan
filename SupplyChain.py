@@ -916,17 +916,3 @@ class OrderProcessor:
                                     product_id, name, quantity, description, product_details))
 
         return order_list
-
-
-def main():
-    inventory1 = []
-    inventory2 = []
-    inventory3 = []
-    inventory = Inventory(inventory1, inventory2, inventory3)
-    orders = []
-    store = Storefront(orders, inventory)
-    store.userMenu()
-
-
-if __name__ == '__main__':
-    main()
